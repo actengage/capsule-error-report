@@ -1,17 +1,16 @@
 {
   "name": "capsule-error-report",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --name CapsuleErrorReport ./src/Components/ErrorReport.vue",
+    "build": "vue-cli-service build --target lib --name CapsuleErrorReport ./src/Components/ErrorReport.vue",
     "build-dev-lib": "NODE_ENV=development vue-cli-service build --target lib --name CapsuleErrorReport ./src/Components/ErrorReport.vue",
     "lint": "vue-cli-service lint",
     "fix": "./node_modules/.bin/eslint src --ext .js --ext .vue --fix",
     "release-patch": "npm version patch --no-git-tag-version; npm run release;",
     "release-minor": "npm version minor --no-git-tag-version; npm run release;",
     "release-major": "npm version major --no-git-tag-version; npm run release;",
-    "release": "npm run fix; npm run build; npm run uglify; npm run commit; npm publish; git push;"
+    "release": "npm run fix; npm run build; npm run commit; npm publish; git push;"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
