@@ -1,6 +1,6 @@
 <template>
     <div>
-        <error-report api-key="PtuWokeDGzxhXPYxAnvsEcYf" filename="test">
+        <error-report api-key="PtuWokeDGzxhXPYxAnvsEcYf" filename="test" :page-controls="false">
 <textarea>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">

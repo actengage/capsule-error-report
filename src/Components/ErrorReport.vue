@@ -24,6 +24,7 @@
             <div v-else>
                 <code-editor
                     v-model="editor"
+                    :page-controls="false"
                     :errors="currentErrors"
                     :contents="currentContents"
                     :filename="currentFilename"
@@ -39,19 +40,25 @@
                 <div class="jumbo-icon">
                     <icon icon="clipboard-check"/>
                 </div>
-                <h1 class="display-5">Your document is valid!</h1>
-                <p>
-                    The errors in the document have been fixed. You need to send it back to ActiveEngagement.
-                </p>
+                <h1 class="display-5 text-center mb-4">Your document is valid!</h1>
 
-                <ol>
-                    <li>
-                        You can automatically send it back directly back to us for processing.
-                    </li>
-                    <li>
-                        Download it and manually send it as an email attachment.
-                    </li>
-                </ol>
+                <card class="mb-4">
+                    <card-body>
+                        <h4>Important</h4>
+                        <p>
+                            The errors in the document have been fixed but you still need to send it back to ActiveEngagement for processing.
+                        </p>
+
+                        <ol class="mb-0 pl-3">
+                            <li class="mb-3">
+                                You can automatically send it back directly back to us for processing.
+                            </li>
+                            <li>
+                                Or download it and manually send it as an email attachment.
+                            </li>
+                        </ol>
+                    </card-body>
+                </card>
 
                 <btn size="lg" variant="success" block @click.prevent="editMode = true">
                     <icon icon="mail-bulk" /> Automatically Send File
@@ -67,6 +74,8 @@
 <script>
 import axios from 'axios';
 import Btn from 'vue-interface/src/Components/Btn';
+import Card from 'vue-interface/src/Components/Card';
+import CardBody from 'vue-interface/src/Components/Card/CardBody';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faBug } from '@fortawesome/free-solid-svg-icons/faBug';
 import { faTools } from '@fortawesome/free-solid-svg-icons/faTools';
@@ -89,7 +98,9 @@ export default {
 
     components: {
         Btn,
+        Card,
         Icon,
+        CardBody,
         ActivityIndicator,
         CodeEditor: () => import('vue-code-editor/src/Editor')
     },
@@ -275,7 +286,7 @@ body {
 
     .error-report-list,
     .error-report-fixed {
-        max-width: 575px;
+        max-width: 525px;
         margin-bottom: 4rem;
     }
 
