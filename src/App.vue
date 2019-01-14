@@ -1,7 +1,11 @@
 <template>
-    <div>
-        <error-report api-key="PtuWokeDGzxhXPYxAnvsEcYf" filename="test" :page-controls="false">
-<textarea>
+  <div>
+    <error-report
+      api-key="PtuWokeDGzxhXPYxAnvsEcYf"
+      filename="test"
+      :page-controls="false"
+    >
+      <textarea>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
@@ -40,8 +44,8 @@
     </body>
 </html>
 </textarea>
-        </error-report>
-    </div>
+    </error-report>
+  </div>
 </template>
 
 <script>

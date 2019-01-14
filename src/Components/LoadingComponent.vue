@@ -1,5 +1,9 @@
 <template>
-    <activity-indicator type="spinner" label="Loading..." center />
+  <activity-indicator
+    type="spinner"
+    label="Loading..."
+    center
+  />
 </template>
 
 <script>
