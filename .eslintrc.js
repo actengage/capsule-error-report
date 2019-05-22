@@ -22,7 +22,7 @@ module.exports = {
         // Indent for tabs because spaces suck
         'indent': ['error', 4],
         // Semi colons always where they need to be
-        'semi': [2,'always'],
+        'semi': [2, 'always'],
         // allow paren-less arrow functions
         'arrow-parens': 0,
         // allow async-await

@@ -17,7 +17,7 @@ module.exports = {
             filename: 'index.html'
         }
     },
-    publicPath: process.env.NODE_ENV === 'production' ? 'http://capsule.actengage.com/dist' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? 'http://thecapsule.email/dist' : '/',
     assetsDir: './src/assets',
     outputDir: './dist'
 }

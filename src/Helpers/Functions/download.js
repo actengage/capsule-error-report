@@ -5,9 +5,7 @@ export default function download(blob, filename) {
                 type: 'text/html'
             });
         }
-
-        console.log(filename);
-
+        
         const element = document.createElement('a');
 
         element.setAttribute('href', URL.createObjectURL(blob));

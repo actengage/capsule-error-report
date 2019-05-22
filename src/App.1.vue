@@ -1,10 +1,11 @@
 <template>
     <div>
         <error-report
-            filename="test.html"
+            api-key="V1f6D3BKckfQeS7jKr3jkcG5"
+            filename="test"
             environment="development"
-            :api-key="apiKey"
-            :errors="errors">
+            :page-controls="false"
+            :errors='[{"match":"<!-- #34,13|tag-close|E042|\"tag is not closed\"# -->","line":34,"column":13,"rule":"tag-close","code":"E042","msg":"\"tag is not closed\""}]'>
             <textarea>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -49,24 +50,17 @@
 </template>
 
 <script>
-import ErrorReport from "./ErrorReport";
+import ErrorReport from "@/Components/ErrorReport";
 
 export default {
     components: {
         ErrorReport
     },
 
-    computed: {
-
-        apiKey() {
-            return process.env.VUE_APP_SECRET;
-        }
-
-    },
-
     data() {
         return {
-            errors: [{"match":"<!-- #34,13|tag-close|E042|\"tag is not closed\"# -->","line":34,"column":13,"rule":"tag-close","code":"E042","msg":"\"tag is not closed\""}]
+            errors: null,
+            contents: null
         };
     }
 };
