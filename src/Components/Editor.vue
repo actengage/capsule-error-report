@@ -31,7 +31,7 @@
                         <animate-css name="fade" up leave-active-class="position-absolute w-100 h-100">
                             <div v-if="activity" class="my-5 py-5">
                                 <div class="my-5">
-                                    <hourglass label="Sending..." animate />
+                                    <hourglass :label="hourGlassLabel" animate />
                                 </div>
                             </div>
                         </animate-css>
@@ -145,6 +145,7 @@ export default {
                 zipname: null,
                 filename: null,
             },
+            hourGlassLabel: null,
             originalErrors: this.errors,
             currentErrors: errors.slice(0),
             currentFilename: this.lint.filename,
@@ -186,7 +187,10 @@ export default {
         },
 
         onClickSend() {
-            throttled(() => this.activity = true);
+            throttled(() => {
+                this.hourGlassLabel = 'Sending...';
+                this.activity = true;
+            });
 
             revision({
                 filename: this.currentFilename,
@@ -207,6 +211,7 @@ export default {
 
         onClickDownload() {
             throttled(() => {
+                this.hourGlassLabel = 'Generating...';
                 this.activity = true;
 
                 zip(this.currentContents, this.currentFilename)
