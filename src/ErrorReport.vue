@@ -1,6 +1,6 @@
 <template>
 
-    <router-view v-if="lint" :lint="lint" />
+    <router-view v-if="lint" :lint="lint" :api-key="apiKey" />
 
     <activity-indicator
         v-else-if="!error"
@@ -23,7 +23,7 @@ import { lint } from './Helpers/Functions';
 import HttpException from './Components/HttpException';
 import ActivityIndicator from 'vue-interface/src/Components/ActivityIndicator';
 
-bugsnag(process.env.VUE_APP_BUGSNAG).use(bugsnagVue, Vue);
+// bugsnag(process.env.VUE_APP_BUGSNAG).use(bugsnagVue, Vue);
 
 export default {
 

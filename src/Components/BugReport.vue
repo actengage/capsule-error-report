@@ -30,7 +30,7 @@
                     <br>
                     <ol>
                         <li v-for="(error, i) in lint.errors" :key="i">
-                            <router-link: to="{name: 'fix', query: { line: error.line, ch: error.line }}" href="#" v-html="format(error)" />
+                            <router-link :to="{name: 'fix', query: { line: error.line - 1, ch: error.column - 1, code: error.code }}" v-html="format(error)" />
                         </li>
                     </ol>
                     <br>
@@ -56,17 +56,16 @@
 
 <script>
 import axios from 'axios';
-import md5 from 'crypto-js/md5';
 import Notepad from 'vue-notepad';
 import { download } from '@/Helpers/Functions';
 import Btn from 'vue-interface/src/Components/Btn';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBug } from '@fortawesome/free-solid-svg-icons/faBug';
 import AnimateCss from 'vue-interface/src/Components/AnimateCss';
 import { DateFilter as date } from 'vue-interface/src/Filters/Date';
-import { FontAwesomeIcon as Icon } from '@fortawesome/vue-fontawesome';
 
+
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTools } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/vue-fontawesome';
 
 library.add(faTools);
 
@@ -95,6 +94,11 @@ export default {
 
     props: {
 
+        apiKey: {
+            type: String,
+            required: true
+        },
+
         lint: {
             type: Object,
             required: true
@@ -107,75 +111,12 @@ export default {
     },
 
     data() {
-        const errors = this.errors || [];
-
         return {
-            editor: null,
-            revision: null,
-            mounted: false,
-            activity: false
+            mounted: false
         };
     },
 
-    computed: {
-        lintOptions() {
-            return {
-                baseURL: `http://thecapsule.${this.environment === 'production' ? 'com' : 'test'}/api/v1`,
-                headers: {
-                    Authorization: `Bearer ${this.apiKey}`
-                }
-            };
-        }
-    },
-
     methods: {
-
-        onClickSend() {
-            this.activity = true;
-
-            this.createRevision()
-                .then(revision => {
-                    this.revision = revision;
-                })
-                .then(() => {
-                    this.activity = false;
-                });
-        },
-
-        onClickDownload() {
-            download(this.currentContents, this.currentFilename);
-        },
-
-        onLintError(e, errors) {
-            this.currentErrors = errors;
-        },
-
-        onLintSuccess(e) {
-            this.currentErrors = [];
-        },
-
-        createRevision() {
-            return new Promise((resolve, reject) => {
-                axios.post('revisions', {
-                    errors: this.originalErrors.map(error => {
-                        error = Object.assign({}, error);
-                        
-                        delete error.open;
-
-                        return error;
-                    }),
-                    filename: this.filename,
-                    revised_html: this.currentContents,
-                    original_html: this.originalContents,
-                    key: md5(this.currentFilename).toString(),
-                }, this.lintOptions)
-                .then(response => {
-                    resolve(response.data);
-                }, e => {
-                    reject(e.response ? e.response.data.errors || e.response.data : e);
-                });
-            });
-        },
 
         format(error) {
             return `Line ${error.line},${error.column} :: ${error.code} ${error.msg} (${error.rule})`;

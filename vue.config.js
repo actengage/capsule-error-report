@@ -3,6 +3,15 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 // vue.config.js
 module.exports = {
     configureWebpack: {
+        devServer: {
+            // clientLogLevel: 'info',
+            watchOptions: {
+                poll: true
+            }
+        },
+        output: {
+            libraryExport: 'default'
+        },
         plugins:[
             // new ManifestPlugin()
         ],
