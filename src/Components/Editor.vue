@@ -18,10 +18,10 @@
                 <div :key="0">
                     <div class="text-center position-relative">
                         <animate-css name="fade" up leave-active-class="position-absolute w-100 h-100">
-                            <div v-if="!activity">
+                            <div v-if="!activity && !error">
                                 <img src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="capsule-editor-modal-logo" />
                                 <h1 class="font-weight-light">Success!</h1>
-                                <h5 class="font-weight-light mb-3 mx-5 px-3">Your document has been fixed. You can choose to send the file back automatically or download it and manually email it as an attachment.</h5>
+                                <h5 class="font-weight-light mb-3 mx-5 px-3">Your document has been fixed. Do you want to automatically send it back to us or download it and manually email it as an attachment?</h5>
                                 <div class="mb-3">
                                     <btn size="lg" variant="success" class="mr-2" @click="onClickSend"><icon icon="envelope" /> Send Now</btn>
                                     <btn size="lg" variant="success" outline @click="onClickDownload"><icon icon="download" /> Download</btn>
@@ -34,15 +34,25 @@
                                     <hourglass :label="hourGlassLabel" animate />
                                 </div>
                             </div>
+                            <http-exception v-else-if="error" :error="error">
+                                <div class="text-center">
+                                    <btn size="lg" class="mr-2" @click="onClickSend">
+                                        <icon icon="redo" /> Try Again
+                                    </btn>
+                                    <btn size="lg" variant="secondary" @click="onClickCancel">
+                                        <icon icon="times-circle" /> Cancel
+                                    </btn>
+                                </div>
+                            </http-exception>
                         </animate-css>
                     </div>
                 </div>
                 <div :key="1">
                     <animate-css name="fade" leave-active-class="position-absolute w-100 h-100">
                         <div class="text-center position-relative my-5">
-                            <icon icon="check-circle" size="6x" />
+                            <icon icon="check-circle" size="6x" class="text-success" />
                             <h1 class="font-weight-light mt-3 mb-0">Revision Sent!</h1>
-                            <h5 class="font-weight-light my-4 mx-5 px-3">We have received your document and will be processed shortly. Thank you for fixing the document!</h5>
+                            <h5 class="font-weight-light my-4 mx-5 px-3">We have received your revised document. Thank you for your assistance!</h5>
                             <btn size="lg" @click="onClickClose">
                                 <icon icon="window-close" /> Close Window
                             </btn>
@@ -51,13 +61,13 @@
                 </div>
                 <div :key="2">
                     <div class="text-center position-relative my-5">
-                        <icon :icon="['far', 'file-archive']" size="6x" />
+                        <icon :icon="['far', 'file-archive']" size="6x" class="text-secondary" />
                         <h1 class="font-weight-light mt-3 mb-0">File Downloaded!</h1>
                         <h4 class="font-weight-light mt-3 mb-1">{{ download.filename }}</h4>
                         <h5 class="font-weight-light mb-4">({{ download.size }})</h5>
                         <div>
                             <btn class="mr-2" size="lg" variant="success" @click="onClickDownloadAgain">
-                                <icon icon="download" /> Download File
+                                <icon icon="download" /> Download Again
                             </btn>
                             <btn size="lg" @click="onClickClose">
                                 <icon icon="window-close" /> Close Window
@@ -75,6 +85,7 @@
 <script>
 import { throttle } from 'lodash';
 import Hourglass from 'vue-hourglass';
+import HttpException from './HttpException';
 import Btn from 'vue-interface/src/Components/Btn';
 import CapsuleEditor from 'capsule-editor/src/Editor';
 import { download, revision, zip } from '@/Helpers/Functions';
@@ -84,13 +95,15 @@ import AnimateCss from 'vue-interface/src/Components/AnimateCss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon as Icon } from '@fortawesome/vue-fontawesome';
 import { faFileArchive } from '@fortawesome/free-regular-svg-icons';
-import { faEnvelope, faDownload, faCheckCircle, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faDownload, faCheckCircle, faTimesCircle, faWindowClose, faRedo } from '@fortawesome/free-solid-svg-icons';
 
+library.add(faRedo);
 library.add(faEnvelope);
 library.add(faDownload);
 library.add(faCheckCircle);
-library.add(faWindowClose);
 library.add(faFileArchive);
+library.add(faTimesCircle);
+library.add(faWindowClose);
 
 const throttled = throttle(fn => {
     fn && fn();
@@ -106,7 +119,8 @@ export default {
         Hourglass,
         SlideDeck,
         AnimateCss,
-        CapsuleEditor
+        CapsuleEditor,
+        HttpException
     },
 
     props: {
@@ -136,6 +150,7 @@ export default {
 
         return {
             active: 0,
+            error: null,
             editor: null,
             revision: null,
             activity: false,
@@ -188,21 +203,28 @@ export default {
 
         onClickSend() {
             throttled(() => {
-                this.hourGlassLabel = 'Sending...';
+                this.error = null;
                 this.activity = true;
-            });
+                this.hourGlassLabel = 'Sending...';
 
-            revision({
-                filename: this.currentFilename,
-                revised_html: this.currentContents,
-                original_html: this.originalContents
-            }).then(response => {
-                console.log(response);
-            }, e => {
-                console.log(e);
-            }).finally(() => {
-                throttled(() => this.active = 1);
+                revision({
+                    filename: this.currentFilename,
+                    revised_html: this.currentContents,
+                    original_html: this.originalContents
+                }).then(response => {
+                    throttled(() => this.active = 1);
+                }, e => {
+                    throttled(() => {
+                        this.error = e;
+                        this.activity = false;
+                    });
+                });
             });
+        },
+
+        onClickCancel() {
+            this.error = null;
+            this.active = 0;
         },
 
         onClickDownloadAgain() {

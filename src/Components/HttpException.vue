@@ -1,9 +1,9 @@
 <template>
 
-    <div class="http-exception">
+    <div class="http-exception" :class="{ fixed }">
         <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
             <div class="http-exception-content my-5">
-                <div class="text-center m-5 p-4">
+                <div class="text-center mx-5 mb-3 p-4">
                     <icon icon="bomb" size="6x"/>
                 </div>
                 <h1 class="font-weight-light mb-4">Something went wrong....</h1>
@@ -16,6 +16,7 @@
                         </template>
                     </ul>
                 </alert>
+                <slot />
             </div>
         </div>
     </div>
@@ -52,7 +53,8 @@ export default {
     },
 
     props: {
-        error: Error
+        error: Error,
+        fixed: Boolean
     }
 
 };
@@ -60,11 +62,14 @@ export default {
 
 <style lang="scss">
 .http-exception {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+
+    &.fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 
     .http-exception-content {
         max-width: 32rem;

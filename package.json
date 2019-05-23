@@ -19,11 +19,11 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "axios": "^0.18.0",
-    "capsule-editor": "^0.3.20",
+    "capsule-editor": "^0.3.22",
     "crypto-js": "^3.1.9-1",
     "jszip": "^3.2.1",
     "moment": "^2.24.0",
-    "vue-hourglass": "^0.1.1",
+    "vue-hourglass": "^0.1.2",
     "vue-interface": "^0.4.2",
     "vue-notepad": "^0.2.10",
     "vue-router": "^3.0.6"
