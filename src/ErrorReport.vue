@@ -2,13 +2,10 @@
 
     <router-view v-if="lint" :lint="lint" :api-key="apiKey" />
 
-    <activity-indicator
-        v-else-if="!error"
-        label="Checking for errors..."
-        type="spinner"
-        center
-    />
-
+    <div v-else-if="!error" class="position-absolute d-flex justify-content-center align-items-center h-100 w-100">
+        <hourglass label="Checking for errors..." animate size="2x" />
+    </div>
+    
     <http-exception v-else :error="error" />
     
 </template>
@@ -18,20 +15,23 @@ import Vue from 'vue';
 import axios from 'axios';
 import router from './router';
 import bugsnag from '@bugsnag/js';
-import bugsnagVue from '@bugsnag/plugin-vue';
+import Hourglass from 'vue-hourglass';
 import { lint } from './Helpers/Functions';
-import HttpException from './Components/HttpException';
-import ActivityIndicator from 'vue-interface/src/Components/ActivityIndicator';
+import bugsnagVue from '@bugsnag/plugin-vue';
+import HttpException from './Components/HttpException'
 
-// bugsnag(process.env.VUE_APP_BUGSNAG).use(bugsnagVue, Vue);
+bugsnag({
+    apiKey: process.env.VUE_APP_BUGSNAG,
+    notifyReleaseStages: ['production', 'staging']
+}).use(bugsnagVue, Vue);
 
 export default {
 
     router,
 
     components: {
-        HttpException,
-        ActivityIndicator
+        Hourglass,
+        HttpException
     },
 
     props: {
@@ -126,4 +126,9 @@ $display5-weight: 300 !default;
 $display5-size: 2.85rem !default;
 
 @import "~bootstrap/scss/bootstrap";
+
+.hourglass .hourglass-label {
+    font-size: 1.5em;
+    margin-top: 1em;
+}
 </style>

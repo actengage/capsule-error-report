@@ -29,4 +29,4 @@ module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? 'http://thecapsule.email/dist' : '/',
     assetsDir: './src/assets',
     outputDir: './dist'
-}
+};

@@ -3231,6 +3231,33 @@
 
 /***/ }),
 
+/***/ "3bf5":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    computed: {
+
+        colorableClasses() {
+            const classes = {};
+
+            for(let i in this.$attrs) {
+                if(i.match(/^bg|text|border|bg-gradient-/)) {
+                    classes[i] = true;
+                }
+            }
+
+            return classes;
+        }
+
+    }
+
+});
+
+
+/***/ }),
+
 /***/ "3c0d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3667,6 +3694,17 @@
 
 })));
 
+
+/***/ }),
+
+/***/ "3f1c":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_css_loader_index_js_ref_8_oneOf_1_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_8_oneOf_1_2_sass_loader_lib_loader_js_ref_8_oneOf_1_3_cache_loader_dist_cjs_js_ref_0_0_vue_loader_lib_index_js_vue_loader_options_Btn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("9cdb");
+/* harmony import */ var _mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_css_loader_index_js_ref_8_oneOf_1_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_8_oneOf_1_2_sass_loader_lib_loader_js_ref_8_oneOf_1_3_cache_loader_dist_cjs_js_ref_0_0_vue_loader_lib_index_js_vue_loader_options_Btn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_css_loader_index_js_ref_8_oneOf_1_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_8_oneOf_1_2_sass_loader_lib_loader_js_ref_8_oneOf_1_3_cache_loader_dist_cjs_js_ref_0_0_vue_loader_lib_index_js_vue_loader_options_Btn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony reexport * */
+ /* unused harmony default export */ var _unused_webpack_default_export = (_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_css_loader_index_js_ref_8_oneOf_1_1_vue_loader_lib_loaders_stylePostLoader_js_postcss_loader_src_index_js_ref_8_oneOf_1_2_sass_loader_lib_loader_js_ref_8_oneOf_1_3_cache_loader_dist_cjs_js_ref_0_0_vue_loader_lib_index_js_vue_loader_options_Btn_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -4243,6 +4281,59 @@
     return hr;
 
 })));
+
+
+/***/ }),
+
+/***/ "4bfd":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Prefix/Prefix.js
+var Prefix = __webpack_require__("e7a6");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Functions/kebabCase.js
+var kebabCase = __webpack_require__("5471");
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Mixins/Sizeable/Sizeable.js
+
+
+
+/* harmony default export */ var Sizeable = ({
+
+    props: {
+
+        /**
+         * The size of the form control
+         *
+         * @property String
+         */
+        size: {
+            type: String,
+            default: 'md',
+            validate: value => ['sm', 'md', 'lg'].indexOf(value) !== -1
+        }
+
+    },
+
+    computed: {
+
+        sizeableClassPrefix() {
+            return Object(kebabCase["a" /* default */])(this.$options.name);
+        },
+
+        sizeableClass() {
+            return Object(Prefix["a" /* default */])(this.size, this.sizeableClassPrefix);
+        }
+
+    }
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Mixins/Sizeable/index.js
+
+/* harmony default export */ var Mixins_Sizeable = __webpack_exports__["a"] = (Sizeable);
 
 
 /***/ }),
@@ -5391,6 +5482,35 @@
     return ugCn;
 
 })));
+
+
+/***/ }),
+
+/***/ "62e4":
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
 
 
 /***/ }),
@@ -8665,6 +8785,210 @@
 
 /***/ }),
 
+/***/ "9719":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3cc14b7c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Btn/Btn.vue?vue&type=template&id=70e3a47a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.to)?_c('router-link',{class:_vm.classes,attrs:{"to":_vm.to,"disabled":_vm.disabled,"role":"button"},on:{"click":_vm.onClick}},[_vm._t("default")],2):(_vm.href)?_c('a',{class:_vm.classes,attrs:{"href":_vm.href,"disabled":_vm.disabled,"role":"button"},on:{"click":_vm.onClick}},[_vm._t("default")],2):(_vm.label)?_c('label',{class:_vm.classes,attrs:{"disabled":_vm.disabled,"role":"button"},on:{"click":_vm.onClick}},[_vm._t("default")],2):_c('button',{class:_vm.classes,attrs:{"type":_vm.type,"disabled":_vm.disabled},on:{"click":_vm.onClick}},[_vm._t("default")],2)}
+var staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Btn/Btn.vue?vue&type=template&id=70e3a47a&
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/Variant/index.js + 1 modules
+var Variant = __webpack_require__("485b");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/Sizeable/index.js + 1 modules
+var Sizeable = __webpack_require__("4bfd");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/Colorable/index.js
+var Colorable = __webpack_require__("c681");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/MergeClasses/index.js + 1 modules
+var MergeClasses = __webpack_require__("bc02");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Functions/kebabCase.js
+var kebabCase = __webpack_require__("5471");
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Btn/Btn.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+/* harmony default export */ var Btnvue_type_script_lang_js_ = ({
+
+    name: 'Btn',
+
+    mixins: [
+        Variant["a" /* default */],
+        Sizeable["a" /* default */],
+        Colorable["a" /* default */],
+        MergeClasses["a" /* default */]
+    ],
+
+    props: {
+
+        /**
+         * Display button with active state
+         *
+         * @property String
+         */
+        active: Boolean,
+
+        /**
+         * Display button with blocked state
+         *
+         * @property String
+         */
+        block: Boolean,
+
+        /**
+         * Display button with disabled state
+         *
+         * @property String
+         */
+        disabled: Boolean,
+
+        /**
+         * If an href is passed, button is an router-link element
+         *
+         * @property Boolean
+         */
+        href: String,
+
+        /**
+         * Should use <label> as the element for the button. Used for inputs
+         * wrappers (toggles).
+         *
+         * @property Boolean
+         */
+        label: Boolean,
+
+        /**
+         * Display as an outline button
+         *
+         * @property String
+         */
+        outline: Boolean,
+
+        /**
+         * If an to is passed, button is an router-link element
+         *
+         * @property Boolean
+         */
+        to: [Object, String],
+
+        /**
+         * The type attribute for the button. Not applied if an anchor
+         *
+         * @property String
+         */
+        type: String
+
+    },
+
+    computed: {
+
+        variantClassPrefix() {
+            return Object(kebabCase["a" /* default */])(this.$options.name) + (this.outline ? '-outline' : '');
+        },
+
+        classes() {
+            return this.mergeClasses(
+                'btn',
+                this.variantClass,
+                this.sizeableClass,
+                this.colorableClasses,
+                this.block ? 'btn-block' : '',
+                this.active ? 'active' : ''
+            );
+        }
+
+    },
+
+    methods: {
+
+        onClick(event) {
+            if(!this.disabled) {
+                this.$emit('click', event);
+            }
+            else {
+                event.preventDefault();
+            }
+        }
+
+    }
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Btn/Btn.vue?vue&type=script&lang=js&
+ /* harmony default export */ var Btn_Btnvue_type_script_lang_js_ = (Btnvue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Components/Btn/Btn.vue?vue&type=style&index=0&lang=scss&
+var Btnvue_type_style_index_0_lang_scss_ = __webpack_require__("3f1c");
+
+// EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+var componentNormalizer = __webpack_require__("2877");
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Btn/Btn.vue
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(componentNormalizer["a" /* default */])(
+  Btn_Btnvue_type_script_lang_js_,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var Btn = (component.exports);
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Btn/index.js
+
+/* harmony default export */ var Components_Btn = __webpack_exports__["a"] = (Btn);
+
+
+/***/ }),
+
 /***/ "972c":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8825,6 +9149,13 @@
 
 })));
 
+
+/***/ }),
+
+/***/ "9cdb":
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -14550,6 +14881,17 @@ var moment_default = /*#__PURE__*/__webpack_require__.n(moment);
 
 /***/ }),
 
+/***/ "c681":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _Colorable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("3bf5");
+
+/* harmony default export */ __webpack_exports__["a"] = (_Colorable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
+
+
+/***/ }),
+
 /***/ "c7aa":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15806,17 +16148,17 @@ var moment_default = /*#__PURE__*/__webpack_require__.n(moment);
 
 /***/ }),
 
-/***/ "dcd0b":
+/***/ "dcd0":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f9c01434-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-notepad/src/Notepad.vue?vue&type=template&id=47c0a665&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"notepad",class:{ editable: _vm.editable },on:{"click":_vm.onClickContainer}},[_c(_vm.is,{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.header),expression:"form.header"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.editable),expression:"editable"}],ref:"header",tag:"component",staticClass:"notepad-header"},[_vm._t("header")],2),_c('div',{staticClass:"notepad-lines"},[_c(_vm.is,{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.body),expression:"form.body"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.editable),expression:"editable"}],ref:"body",tag:"component",staticClass:"notepad-body"},[_vm._t("default")],2)],1),_c(_vm.is,{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.footer),expression:"form.footer"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.editable),expression:"editable"}],ref:"footer",tag:"component",staticClass:"notepad-footer"},[_vm._t("footer")],2)],1)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3cc14b7c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-notepad/src/Notepad.vue?vue&type=template&id=0f97e36c&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"notepad",class:{ editable: _vm.editable },on:{"click":_vm.onClickContainer}},[_c(this.component(_vm.header),{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.header),expression:"form.header"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.header && _vm.editable),expression:"header && editable"}],ref:"header",tag:"component",staticClass:"notepad-header"},[_vm._t("header")],2),_c('div',{staticClass:"notepad-lines"},[_c(this.component(_vm.body),{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.body),expression:"form.body"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.body && _vm.editable),expression:"body && editable"}],ref:"body",tag:"component",staticClass:"notepad-body"},[_vm._t("default")],2)],1),_c(this.component(_vm.footer),{directives:[{name:"component-model",rawName:"v-component-model",value:(_vm.form.footer),expression:"form.footer"},{name:"autogrow",rawName:"v-autogrow",value:(_vm.footer && _vm.editable),expression:"footer && editable"}],ref:"footer",tag:"component",staticClass:"notepad-footer"},[_vm._t("footer")],2)],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./node_modules/vue-notepad/src/Notepad.vue?vue&type=template&id=47c0a665&
+// CONCATENATED MODULE: ./node_modules/vue-notepad/src/Notepad.vue?vue&type=template&id=0f97e36c&
 
 // CONCATENATED MODULE: ./node_modules/vue-interface/src/Directives/Autogrow/Autogrow.js
 const STYLE_ATTRIBUTES = [
@@ -15885,7 +16227,7 @@ function input(div, el, minHeight, maxHeight) {
     let dynamicHeight = Math.max(minHeight, height(div));
   
     if(div.innerHTML.match(/(<br\s?\/?\>)+/)) {
-       dynamicHeight += Autogrow_int(style(el, 'lineHeight'));
+        dynamicHeight += Autogrow_int(style(el, 'lineHeight'));
     }
 
     el.style.height = (
@@ -15893,18 +16235,8 @@ function input(div, el, minHeight, maxHeight) {
     ) + 'px';
 }
 
-function height(el, div) {
-    return Autogrow_int(window.getComputedStyle(el).height);
-
-    /*
-    const style = window.getComputedStyle(el);
-    const height = int(style.height);
-    const lineHeight = int(style.lineHeight) || int(style.fontSize) * 1.2;
-    
-    console.log(height, lineHeight);
-
-    return div.offsetHeight; // + int(div.style.marginTop) + int(div.style.marginBottom);// + (lineHeightModifier ? int(lineHeight) * 1 : 0);// + (int(lineHeight) * lineHeightModifier);
-    */
+function height(el) {
+    return Autogrow_int(style(el, 'height'));
 }
 
 function style(el, attr) {
@@ -15976,13 +16308,51 @@ function init(el, binding, vnode) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ var Notepadvue_type_script_lang_js_ = ({
 
     props: {
-        editable: Boolean
+        
+        editable: Boolean,
+
+        header: {
+            type: Boolean, 
+            default: true
+        },
+
+        body: {
+            type: Boolean, 
+            default: true
+        },
+
+        footer: {
+            type: Boolean, 
+            default: true
+        }
+
     },
 
     directives: {
@@ -16020,13 +16390,11 @@ function init(el, binding, vnode) {
 
     },
 
-    computed: {
-        is() {
-            return this.editable ? 'textarea' : 'div';
-        }
-    },
-
     methods: {
+        
+        component(value) {
+            return value && this.editable ? 'textarea' : 'div';
+        },
         
         onClickContainer() {
             if(this.$refs.body && this.editable) {
