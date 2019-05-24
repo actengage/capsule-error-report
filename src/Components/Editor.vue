@@ -21,7 +21,7 @@
                             <div v-if="!activity && !error">
                                 <img src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="capsule-editor-modal-logo" />
                                 <h1 class="font-weight-light mb-4">Document Fixed!</h1>
-                                <h5 class="font-weight-light mb-4 mx-5 px-3">Do you want to automatically send it back to us or download it and manually email it as an attachment?</h5>
+                                <h5 class="font-weight-light mb-4 mx-5">Do you want to automatically send it back to us or download it and manually email it as an attachment?</h5>
                                 <div class="mb-5">
                                     <btn size="lg" variant="success" class="mr-2" @click="onClickSend"><icon icon="envelope" /> Send Now</btn>
                                     <btn size="lg" variant="success" outline @click="onClickDownload"><icon icon="download" /> Download</btn>
