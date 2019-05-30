@@ -92,11 +92,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"0":1,"2":1,"3":1,"5":1,"6":1,"7":1,"8":1};
+/******/ 		var cssChunks = {"0":1,"2":1,"4":1,"5":1,"6":1,"7":1,"8":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "src/assets/css/" + ({}[chunkId]||chunkId) + "." + {"0":"edd37d64","2":"86e8ae9b","3":"ba00da19","4":"31d6cfe0","5":"f5d88791","6":"0052c8b1","7":"c98a729b","8":"58d1b3ee","9":"31d6cfe0"}[chunkId] + ".css";
+/******/ 				var href = "src/assets/css/" + ({}[chunkId]||chunkId) + "." + {"0":"edd37d64","2":"86e8ae9b","3":"31d6cfe0","4":"4a871b3b","5":"f5d88791","6":"0052c8b1","7":"c98a729b","8":"58d1b3ee","9":"31d6cfe0"}[chunkId] + ".css";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {
@@ -1287,11 +1287,17 @@ BugsnagReport.getStacktrace = function (error, errorFramesToSkip, generatedFrame
     generatedFramesToSkip = 0;
   }
 
-  if (_$hasStack_9(error)) return _$errorStackParser_7.parse(error).slice(errorFramesToSkip); // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+  if (_$hasStack_9(error)) return _$errorStackParser_7.parse(error).slice(errorFramesToSkip); // in IE11 a new Error() doesn't have a stacktrace until you throw it, so try that here
 
-  return __filter_24(_$stackGenerator_22.backtrace(), function (frame) {
-    return (frame.functionName || '').indexOf('StackGenerator$$') === -1;
-  }).slice(1 + generatedFramesToSkip);
+  try {
+    throw error;
+  } catch (e) {
+    if (_$hasStack_9(e)) return _$errorStackParser_7.parse(error).slice(1 + generatedFramesToSkip); // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+
+    return __filter_24(_$stackGenerator_22.backtrace(), function (frame) {
+      return (frame.functionName || '').indexOf('StackGenerator$$') === -1;
+    }).slice(1 + generatedFramesToSkip);
+  }
 };
 
 BugsnagReport.ensureReport = function (reportOrError, errorFramesToSkip, generatedFramesToSkip) {
@@ -2308,10 +2314,13 @@ var CONSOLE_LOG_METHODS = __filter_33(['log', 'debug', 'info', 'warn', 'error'],
   return typeof console !== 'undefined' && typeof console[method] === 'function';
 });
 
-var _$inlineScriptContent_34 = {};
-var __reduce_34 = _$esUtils_8.reduce;
+var __map_34 = _$esUtils_8.map,
+    __reduce_34 = _$esUtils_8.reduce,
+    __filter_34 = _$esUtils_8.filter;
 
-_$inlineScriptContent_34 = {
+var MAX_LINE_LENGTH = 200;
+var MAX_SCRIPT_LENGTH = 500000;
+var _$inlineScriptContent_34 = {
   init: function (client, doc, win) {
     if (doc === void 0) {
       doc = document;
@@ -2321,35 +2330,13 @@ _$inlineScriptContent_34 = {
       win = window;
     }
 
+    if (!client.config.trackInlineScripts) return;
+    var originalLocation = win.location.href;
     var html = '';
     var DOMContentLoaded = false;
 
     var getHtml = function () {
       return doc.documentElement.outerHTML;
-    };
-
-    var originalLocation = win.location.href;
-
-    var addInlineContent = function (report) {
-      var frame = report.stacktrace[0];
-      if (!frame || !frame.file || !frame.lineNumber) return frame;
-      if (frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return frame;
-      if (!DOMContentLoaded || !html) html = getHtml();
-      var htmlLines = ['<!-- DOC START -->'].concat(html.split('\n'));
-
-      var _extractScriptContent = extractScriptContent(htmlLines, frame.lineNumber - 1),
-          script = _extractScriptContent.script,
-          start = _extractScriptContent.start;
-
-      var code = __reduce_34(script, function (accum, line, i) {
-        if (Math.abs(start + i + 1 - frame.lineNumber) > 10) return accum;
-        accum["" + (start + i + 1)] = line;
-        return accum;
-      }, {});
-      frame.code = code;
-      report.updateMetaData('script', {
-        content: script.join('\n')
-      });
     }; // get whatever HTML exists at this point in time
 
 
@@ -2366,38 +2353,178 @@ _$inlineScriptContent_34 = {
       if (typeof prev === 'function') prev.apply(this, arguments);
     };
 
-    client.config.beforeSend.unshift(addInlineContent);
+    var _lastScript = null;
+
+    var updateLastScript = function (script) {
+      _lastScript = script;
+    };
+
+    var getCurrentScript = function () {
+      var script = doc.currentScript || _lastScript;
+
+      if (!script && !DOMContentLoaded) {
+        var scripts = doc.scripts || doc.getElementsByTagName('script');
+        script = scripts[scripts.length - 1];
+      }
+
+      return script;
+    };
+
+    var addSurroundingCode = function (lineNumber) {
+      // get whatever html has rendered at this point
+      if (!DOMContentLoaded || !html) html = getHtml(); // simulate the raw html
+
+      var htmlLines = ['<!-- DOC START -->'].concat(html.split('\n'));
+      var zeroBasedLine = lineNumber - 1;
+      var start = Math.max(zeroBasedLine - 3, 0);
+      var end = Math.min(zeroBasedLine + 3, htmlLines.length - 1);
+      return __reduce_34(htmlLines.slice(start, end), function (accum, line, i) {
+        accum[i + lineNumber - 3] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH);
+        return accum;
+      }, {});
+    };
+
+    client.config.beforeSend.unshift(function (report) {
+      // remove any of our own frames that may be part the stack this
+      // happens before the inline script check as it happens for all errors
+      report.stacktrace = __filter_34(report.stacktrace, function (f) {
+        return !/__trace__$/.test(f.method);
+      });
+      var frame = report.stacktrace[0]; // if frame.file exists and is not the original location of the page, this can't be an inline script
+
+      if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return; // grab the last script known to have run
+
+      var currentScript = getCurrentScript();
+
+      if (currentScript) {
+        var content = currentScript.innerHTML;
+        report.updateMetaData('script', 'content', content.length <= MAX_SCRIPT_LENGTH ? content : content.substr(0, MAX_SCRIPT_LENGTH));
+      } // only attempt to grab some surrounding code if we have a line number
+
+
+      if (frame.lineNumber === undefined) return;
+      frame.code = addSurroundingCode(frame.lineNumber);
+    }); // Proxy all the timer functions whose callback is their 0th argument.
+    // Keep a reference to the original setTimeout because we need it later
+
+    var _map = __map_34(['setTimeout', 'setInterval', 'setImmediate', 'requestAnimationFrame'], function (fn) {
+      return __proxy(win, fn, function (original) {
+        return __traceOriginalScript(original, function (args) {
+          return {
+            get: function () {
+              return args[0];
+            },
+            replace: function (fn) {
+              args[0] = fn;
+            }
+          };
+        });
+      });
+    }),
+        _setTimeout = _map[0]; // Proxy all the host objects whose prototypes have an addEventListener function
+
+
+    __map_34(['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase', 'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow', 'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList', 'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'], function (o) {
+      if (!win[o] || !win[o].prototype || typeof win[o].prototype.addEventListener !== 'function') return;
+
+      __proxy(win[o].prototype, 'addEventListener', function (original) {
+        return __traceOriginalScript(original, eventTargetCallbackAccessor);
+      });
+
+      __proxy(win[o].prototype, 'removeEventListener', function (original) {
+        return __traceOriginalScript(original, eventTargetCallbackAccessor);
+      });
+    });
+
+    function __traceOriginalScript(fn, callbackAccessor) {
+      return function () {
+        var args = Array.prototype.slice.call(arguments);
+        var cba = callbackAccessor(args);
+        var cb = cba.get();
+        if (typeof cb !== 'function') return fn.apply(this, args);
+
+        try {
+          if (cb.__trace__) {
+            cba.replace(cb.__trace__);
+          } else {
+            var script = getCurrentScript(); // this function mustn't be annonymous due to a bug in the stack
+            // generation logic, meaning it gets tripped up
+            // see: https://github.com/stacktracejs/stack-generator/issues/6
+
+            cb.__trace__ = function __trace__() {
+              // set the script that called this function
+              updateLastScript(script); // immediately unset the currentScript synchronously below, however
+              // if this cb throws an error the line after will not get run so schedule
+              // an almost-immediate aysnc update too
+
+              _setTimeout(function () {
+                updateLastScript(null);
+              }, 0);
+
+              var ret = cb.apply(this, arguments);
+              updateLastScript(null);
+              return ret;
+            };
+
+            cb.__trace__.__trace__ = cb.__trace__;
+            cba.replace(cb.__trace__);
+          }
+        } catch (e) {} // swallow these errors on Selenium:
+        // Permission denied to access property '__trace__'
+        // IE8 doesn't let you call .apply() on setTimeout/setInterval
+
+
+        if (fn.apply) return fn.apply(this, args);
+
+        switch (args.length) {
+          case 1:
+            return fn(args[0]);
+
+          case 2:
+            return fn(args[0], args[1]);
+
+          default:
+            return fn();
+        }
+      };
+    }
+  },
+  configSchema: {
+    trackInlineScripts: {
+      validate: function (value) {
+        return value === true || value === false;
+      },
+      defaultValue: function () {
+        return true;
+      },
+      message: 'should be true|false'
+    }
   }
 };
-var scriptStartRe = /^.*<script.*?>/;
-var scriptEndRe = /<\/script>.*$/;
 
-var extractScriptContent = _$inlineScriptContent_34.extractScriptContent = function (lines, startLine) {
-  // search down for </script>
-  var line = startLine;
+function __proxy(host, name, replacer) {
+  var original = host[name];
+  if (!original) return original;
+  var replacement = replacer(original);
+  host[name] = replacement;
+  return original;
+}
 
-  while (line < lines.length && !scriptEndRe.test(lines[line])) {
-    line++;
-  } // search up for <script>
-
-
-  var end = line;
-
-  while (line > 0 && !scriptStartRe.test(lines[line])) {
-    line--;
-  }
-
-  var start = line; // strip <script> tags so that lines just contain js content
-
-  var script = lines.slice(start, end + 1);
-  script[0] = script[0].replace(scriptStartRe, '');
-  script[script.length - 1] = script[script.length - 1].replace(scriptEndRe, ''); // return the array of lines, and the line number the script started at
-
+function eventTargetCallbackAccessor(args) {
+  var isEventHandlerObj = !!args[1] && typeof args[1].handleEvent === 'function';
   return {
-    script: script,
-    start: start
+    get: function () {
+      return isEventHandlerObj ? args[1].handleEvent : args[1];
+    },
+    replace: function (fn) {
+      if (isEventHandlerObj) {
+        args[1].handleEvent = fn;
+      } else {
+        args[1] = fn;
+      }
+    }
   };
-};
+}
 
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
@@ -2422,7 +2549,7 @@ var _$interactionBreadcrumbs_35 = {
         targetText = '[hidden]';
         targetSelector = '[hidden]';
 
-        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/y94fq5zm');
+        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z');
       }
 
       client.leaveBreadcrumb('UI click', {
@@ -2579,9 +2706,7 @@ var wrapHistoryFn = function (client, target, fn, win) {
     orig.apply(target, [state, title].concat(url !== undefined ? url : []));
   };
 
-  target[fn]._restore = function () {
-    target[fn] = orig;
-  };
+  if (false) {}
 };
 
 var getCurrentState = function (win) {
@@ -2831,7 +2956,7 @@ var _$onerror_40 = {
     function onerror(messageOrEvent, url, lineNo, charNo, error) {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {
-        client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/y94fq5zm');
+        client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/yy3rn63z');
       } else {
         // any error sent to window.onerror is unhandled and has severity=error
         var handledState = {
@@ -3051,7 +3176,7 @@ var _$notifier_2 = {};
 function ___extends_2() { ___extends_2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return ___extends_2.apply(this, arguments); }
 
 var name = 'Bugsnag JavaScript';
-var version = '6.2.0';
+var version = '6.3.0';
 var url = 'https://github.com/bugsnag/bugsnag-js';
 
 /* removed: var _$BugsnagClient_4 = require('@bugsnag/core/client'); */;
@@ -3060,9 +3185,7 @@ var url = 'https://github.com/bugsnag/bugsnag-js';
 
 /* removed: var _$Session_25 = require('@bugsnag/core/session'); */;
 
-/* removed: var _$BugsnagBreadcrumb_3 = require('@bugsnag/core/breadcrumb'); */;
-
-var __map_2 = _$esUtils_8.map; // extend the base config schema with some browser-specific options
+/* removed: var _$BugsnagBreadcrumb_3 = require('@bugsnag/core/breadcrumb'); */; // extend the base config schema with some browser-specific options
 
 
 var __schema_2 = ___extends_2({}, _$config_5.schema, _$config_1);
@@ -3106,23 +3229,10 @@ _$notifier_2 = function (opts) {
     apiKey: opts // support renamed/deprecated options
 
   };
-  var warnings = [];
-
-  if (opts.sessionTrackingEnabled) {
-    warnings.push('deprecated option sessionTrackingEnabled is now called autoCaptureSessions');
-    opts.autoCaptureSessions = opts.sessionTrackingEnabled;
-  }
-
-  if ((opts.endpoint || opts.sessionEndpoint) && !opts.endpoints) {
-    warnings.push('deprecated options endpoint/sessionEndpoint are now configured in the endpoints object');
-    opts.endpoints = {
-      notify: opts.endpoint,
-      sessions: opts.sessionEndpoint
-    };
-  }
+  var warningMessage = '';
 
   if (opts.endpoints && opts.endpoints.notify && !opts.endpoints.sessions) {
-    warnings.push('notify endpoint is set but sessions endpoint is not. No sessions will be sent.');
+    warningMessage += 'notify endpoint is set but sessions endpoint is not. No sessions will be sent.';
   }
 
   var bugsnag = new _$BugsnagClient_4({
@@ -3136,14 +3246,11 @@ _$notifier_2 = function (opts) {
   // errors can be thrown here that prevent the lib from being in a useable state
 
   bugsnag.configure(__schema_2);
-  __map_2(warnings, function (w) {
-    return bugsnag._logger.warn(w);
-  }); // always-on browser-specific plugins
+  if (warningMessage) bugsnag._logger.warn(warningMessage); // always-on browser-specific plugins
 
   bugsnag.use(_$device_29);
   bugsnag.use(_$context_28);
   bugsnag.use(_$request_30);
-  bugsnag.use(_$inlineScriptContent_34);
   bugsnag.use(_$throttle_38);
   bugsnag.use(_$session_31);
   bugsnag.use(_$clientIp_32);
@@ -3157,7 +3264,9 @@ _$notifier_2 = function (opts) {
   bugsnag.use(_$navigationBreadcrumbs_36);
   bugsnag.use(_$interactionBreadcrumbs_35);
   bugsnag.use(_$networkBreadcrumbs_37);
-  bugsnag.use(_$consoleBreadcrumbs_33);
+  bugsnag.use(_$consoleBreadcrumbs_33); // this one added last to avoid wrapping functionality before bugsnag uses it
+
+  bugsnag.use(_$inlineScriptContent_34);
 
   bugsnag._logger.debug("Loaded!");
 
@@ -4551,507 +4660,6 @@ return _$src_1;
 
 /***/ }),
 
-/***/ "3259":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alert",class:_vm.mergeClasses(_vm.variantClass, {show: _vm.isVisible, fade: _vm.fade}),attrs:{"role":"alert"}},[(_vm.dismissible)?_c('alert-close',{on:{"click":function($event){return _vm.dismiss()}}}):_vm._e(),(_vm.title || _vm.heading)?_c('alert-heading',[_vm._v("\n        "+_vm._s(_vm.title || _vm.heading)+"\n    ")]):_vm._e(),_vm._t("default"),(typeof _vm.show === 'number')?_c('progress-bar',{staticClass:"my-3",attrs:{"variant":_vm.variant,"height":5,"value":_vm.dismissCount,"max":_vm.show}}):_vm._e()],2)}
-var staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
-var AlertClosevue_type_template_id_09567316_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{staticClass:"close",attrs:{"type":"button","data-dismiss":"alert","aria-label":"Close"},on:{"click":_vm.onClick}},[_c('span',{attrs:{"aria-hidden":"true"}},[_vm._v("\n        ×\n    ")])])}
-var AlertClosevue_type_template_id_09567316_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ var AlertClosevue_type_script_lang_js_ = ({
-
-    name: 'AlertClose',
-
-    methods: {
-
-        onClick(event) {
-            this.$emit('click', event);
-        }
-
-    }
-
-});
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=script&lang=js&
- /* harmony default export */ var Alert_AlertClosevue_type_script_lang_js_ = (AlertClosevue_type_script_lang_js_); 
-// EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-var componentNormalizer = __webpack_require__("2877");
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue
-
-
-
-
-
-/* normalize component */
-
-var component = Object(componentNormalizer["a" /* default */])(
-  Alert_AlertClosevue_type_script_lang_js_,
-  AlertClosevue_type_template_id_09567316_render,
-  AlertClosevue_type_template_id_09567316_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var AlertClose = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
-var AlertHeadingvue_type_template_id_78ba96e0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h4',{staticClass:"alert-heading"},[_vm._t("default")],2)}
-var AlertHeadingvue_type_template_id_78ba96e0_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ var AlertHeadingvue_type_script_lang_js_ = ({
-
-    name: 'AlertHeading'
-
-});
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=script&lang=js&
- /* harmony default export */ var Alert_AlertHeadingvue_type_script_lang_js_ = (AlertHeadingvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue
-
-
-
-
-
-/* normalize component */
-
-var AlertHeading_component = Object(componentNormalizer["a" /* default */])(
-  Alert_AlertHeadingvue_type_script_lang_js_,
-  AlertHeadingvue_type_template_id_78ba96e0_render,
-  AlertHeadingvue_type_template_id_78ba96e0_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var AlertHeading = (AlertHeading_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
-var ProgressBarvue_type_template_id_2456986c_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"progress",style:({'height': _vm.formattedHeight})},[_c('div',{staticClass:"progress-bar",class:_vm.mergeClasses(_vm.progressClasses, _vm.variantClass),style:(_vm.styles),attrs:{"role":"progressbar","aria-valuenow":_vm.offsetValue,"aria-valuemin":_vm.min,"aria-valuemax":_vm.max}},[(!!_vm.label)?_c('span',[(_vm.label !== true)?[_vm._v("\n                "+_vm._s(_vm.label)+"\n            ")]:_vm._e(),_vm._v(" "+_vm._s(_vm.offsetValue)+"%\n        ")],2):_c('span',[_vm._t("default")],2)])])}
-var ProgressBarvue_type_template_id_2456986c_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
-
-// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Functions/unit.js
-var unit = __webpack_require__("0f2b");
-
-// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/Variant/index.js + 1 modules
-var Variant = __webpack_require__("485b");
-
-// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/MergeClasses/index.js + 1 modules
-var MergeClasses = __webpack_require__("bc02");
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ var ProgressBarvue_type_script_lang_js_ = ({
-
-    name: 'ProgressBar',
-
-    mixins: [
-        Variant["a" /* default */],
-        MergeClasses["a" /* default */]
-    ],
-
-    props: {
-
-        /**
-         * A custom color to be applied inline in the styles vs a contextual
-         * variant.
-         *
-         * @property String
-         */
-        color: String,
-
-        /**
-         * The progress bar percentage value
-         *
-         * @property String
-         */
-        value: {
-            type: Number,
-            required: true
-        },
-
-        /**
-         * The height of the progress bar
-         *
-         * @property String
-         */
-        height: [Number, String],
-
-        /**
-         * Show the progress bar value as a label inside the bar
-         *
-         * @property String
-         */
-        label: [String, Boolean],
-
-        /**
-         * Should the progress bar appear with stripes
-         *
-         * @property String
-         */
-        striped: Boolean,
-
-        /**
-         * Should the progress bar appear with animated stripes
-         *
-         * @property String
-         */
-        animated: Boolean,
-
-        /**
-         * The minimum value
-         *
-         * @property String
-         */
-        min: {
-            type: Number,
-            default: 0
-        },
-
-        /**
-         * The max value
-         *
-         * @property String
-         */
-        max: {
-            type: Number,
-            default: 100
-        }
-
-    },
-
-    computed: {
-
-        variantClassPrefix() {
-            return 'bg';
-        },
-
-        offsetValue() {
-            return this.value / this.max * 100;
-        },
-
-        formattedHeight() {
-            return this.height ? Object(unit["a" /* default */])(this.height) : null;
-        },
-
-        progressClasses() {
-            return {
-                'progress-bar-striped': this.striped,
-                'progress-bar-animated': this.animated
-            };
-        },
-
-        styles() {
-            return {
-                width: `${this.offsetValue}%`,
-                background: `${this.color} !important`
-            };
-        }
-
-    }
-
-});
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=script&lang=js&
- /* harmony default export */ var ProgressBar_ProgressBarvue_type_script_lang_js_ = (ProgressBarvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue
-
-
-
-
-
-/* normalize component */
-
-var ProgressBar_component = Object(componentNormalizer["a" /* default */])(
-  ProgressBar_ProgressBarvue_type_script_lang_js_,
-  ProgressBarvue_type_template_id_2456986c_render,
-  ProgressBarvue_type_template_id_2456986c_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var ProgressBar = (ProgressBar_component.exports);
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/index.js
-
-/* harmony default export */ var Components_ProgressBar = (ProgressBar);
-
-// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Transition/index.js + 1 modules
-var Transition = __webpack_require__("d555");
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-/* harmony default export */ var Alertvue_type_script_lang_js_ = ({
-
-    name: 'Alert',
-
-    components: {
-        AlertClose: AlertClose,
-        AlertHeading: AlertHeading,
-        ProgressBar: Components_ProgressBar
-    },
-
-    mixins: [
-        Variant["a" /* default */],
-        MergeClasses["a" /* default */]
-    ],
-
-    props: {
-
-        /**
-         * Is the alert dismissible
-         *
-         * @property Boolean
-         */
-        dismissible: Boolean,
-
-        /**
-         * The alert's title/heading
-         *
-         * @property Boolean
-         */
-        heading: String,
-
-        /**
-         * The alert's title/heading
-         *
-         * @property Boolean
-         */
-        title: String,
-
-        /**
-         * Should the alert fade when hidden
-         *
-         * @property Boolean
-         */
-        fade: {
-            type: Boolean,
-            default: true
-        },
-
-        /**
-         * Should the alert be visible by default. If passed a number, alert
-         * will be shown for the number of seconds that are passed.
-         *
-         * @property Boolean
-         */
-        show: {
-            type: [Number, Boolean],
-            default: true
-        }
-
-    },
-
-    data() {
-        return {
-            dismissCount: this.show,
-            isVisible: this.show
-        };
-    },
-
-    mounted() {
-        if(typeof this.show === 'number') {
-            const el = this.$el.querySelector('.progress-bar');
-
-            this.$emit('dismiss-countdown', this.dismissCount = this.show);
-
-            const interval = setInterval(() => {
-                this.$emit('dismiss-countdown', this.dismissCount -= 1);
-
-                if(!this.dismissCount) {
-                    clearInterval(interval);
-                    Object(Transition["a" /* default */])(el).then(delay => this.dismiss());
-                }
-            }, 1000);
-        }
-    },
-
-    methods: {
-
-        dismiss() {
-            this.isVisible = false;
-
-            Object(Transition["a" /* default */])(this.$el).then(delay => {
-                this.$emit('dismiss');
-            });
-        }
-
-    }
-
-});
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=script&lang=js&
- /* harmony default export */ var Alert_Alertvue_type_script_lang_js_ = (Alertvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue
-
-
-
-
-
-/* normalize component */
-
-var Alert_component = Object(componentNormalizer["a" /* default */])(
-  Alert_Alertvue_type_script_lang_js_,
-  render,
-  staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var Alert = (Alert_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
-var AlertLinkvue_type_template_id_31ebd2b6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('a',{staticClass:"alert-link"},[_vm._t("default")],2)}
-var AlertLinkvue_type_template_id_31ebd2b6_staticRenderFns = []
-
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=script&lang=js&
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ var AlertLinkvue_type_script_lang_js_ = ({
-
-    name: 'AlertLink'
-
-});
-
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=script&lang=js&
- /* harmony default export */ var Alert_AlertLinkvue_type_script_lang_js_ = (AlertLinkvue_type_script_lang_js_); 
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue
-
-
-
-
-
-/* normalize component */
-
-var AlertLink_component = Object(componentNormalizer["a" /* default */])(
-  Alert_AlertLinkvue_type_script_lang_js_,
-  AlertLinkvue_type_template_id_31ebd2b6_render,
-  AlertLinkvue_type_template_id_31ebd2b6_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var AlertLink = (AlertLink_component.exports);
-// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/index.js
-/* unused concated harmony import AlertClose */
-/* unused concated harmony import AlertHeading */
-/* unused concated harmony import AlertLink */
-
-
-
-
-
-
-
-/* harmony default export */ var Components_Alert = __webpack_exports__["a"] = (Alert);
-
-
-/***/ }),
-
 /***/ "353a":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5377,7 +4985,7 @@ function kebabCase(str) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/AnimateCss/AnimateCss.vue?vue&type=template&id=3fcac30d&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/AnimateCss/AnimateCss.vue?vue&type=template&id=3fcac30d&
 var render = function () {
 var this$1 = this;
 var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"duration":_vm.duration,"enter-class":_vm.enterClass,"enter-to-class":_vm.enterToClass,"enter-active-class":_vm.enterActiveClassName,"leave-class":_vm.leaveClass,"leave-to-class":_vm.leaveToClass,"leave-active-class":_vm.leaveActiveClassName},on:{"before-enter":function () {
@@ -5621,15 +5229,502 @@ var component = Object(componentNormalizer["a" /* default */])(
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"http-exception",class:{ fixed: _vm.fixed }},[_c('div',{staticClass:"d-flex flex-column justify-content-center align-items-center w-100 h-100"},[_c('div',{staticClass:"http-exception-content my-5"},[_c('div',{staticClass:"text-center mx-5 mb-3 p-4"},[_c('icon',{attrs:{"icon":"bomb","size":"6x"}})],1),_c('h1',{staticClass:"font-weight-light mb-4"},[_vm._v("Something went wrong....")]),_c('alert',[_c('h4',{staticClass:"font-weight-light m-3"},[_vm._v(_vm._s(_vm.error))]),_c('ul',{staticClass:"mt-3"},[_vm._l((_vm.error.response.data.errors),function(errors){return _vm._l((errors),function(error,i){return _c('li',{key:i},[_c('h5',[_vm._v(_vm._s(error))])])})})],2)]),_vm._t("default")],2)])])}
 var staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
 
-// EXTERNAL MODULE: ./node_modules/vue-interface/src/Components/Alert/index.js + 26 modules
-var Alert = __webpack_require__("3259");
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
+var Alertvue_type_template_id_44f91d03_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alert",class:_vm.mergeClasses(_vm.variantClass, {show: _vm.isVisible, fade: _vm.fade}),attrs:{"role":"alert"}},[(_vm.dismissible)?_c('alert-close',{on:{"click":function($event){return _vm.dismiss()}}}):_vm._e(),(_vm.title || _vm.heading)?_c('alert-heading',[_vm._v("\n        "+_vm._s(_vm.title || _vm.heading)+"\n    ")]):_vm._e(),_vm._t("default"),(typeof _vm.show === 'number')?_c('progress-bar',{staticClass:"my-3",attrs:{"variant":_vm.variant,"height":5,"value":_vm.dismissCount,"max":_vm.show}}):_vm._e()],2)}
+var Alertvue_type_template_id_44f91d03_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
+var AlertClosevue_type_template_id_09567316_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{staticClass:"close",attrs:{"type":"button","data-dismiss":"alert","aria-label":"Close"},on:{"click":_vm.onClick}},[_c('span',{attrs:{"aria-hidden":"true"}},[_vm._v("\n        ×\n    ")])])}
+var AlertClosevue_type_template_id_09567316_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ var AlertClosevue_type_script_lang_js_ = ({
+
+    name: 'AlertClose',
+
+    methods: {
+
+        onClick(event) {
+            this.$emit('click', event);
+        }
+
+    }
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=script&lang=js&
+ /* harmony default export */ var Alert_AlertClosevue_type_script_lang_js_ = (AlertClosevue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+var componentNormalizer = __webpack_require__("2877");
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertClose.vue
+
+
+
+
+
+/* normalize component */
+
+var component = Object(componentNormalizer["a" /* default */])(
+  Alert_AlertClosevue_type_script_lang_js_,
+  AlertClosevue_type_template_id_09567316_render,
+  AlertClosevue_type_template_id_09567316_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var AlertClose = (component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
+var AlertHeadingvue_type_template_id_78ba96e0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h4',{staticClass:"alert-heading"},[_vm._t("default")],2)}
+var AlertHeadingvue_type_template_id_78ba96e0_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ var AlertHeadingvue_type_script_lang_js_ = ({
+
+    name: 'AlertHeading'
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=script&lang=js&
+ /* harmony default export */ var Alert_AlertHeadingvue_type_script_lang_js_ = (AlertHeadingvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue
+
+
+
+
+
+/* normalize component */
+
+var AlertHeading_component = Object(componentNormalizer["a" /* default */])(
+  Alert_AlertHeadingvue_type_script_lang_js_,
+  AlertHeadingvue_type_template_id_78ba96e0_render,
+  AlertHeadingvue_type_template_id_78ba96e0_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var AlertHeading = (AlertHeading_component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
+var ProgressBarvue_type_template_id_2456986c_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"progress",style:({'height': _vm.formattedHeight})},[_c('div',{staticClass:"progress-bar",class:_vm.mergeClasses(_vm.progressClasses, _vm.variantClass),style:(_vm.styles),attrs:{"role":"progressbar","aria-valuenow":_vm.offsetValue,"aria-valuemin":_vm.min,"aria-valuemax":_vm.max}},[(!!_vm.label)?_c('span',[(_vm.label !== true)?[_vm._v("\n                "+_vm._s(_vm.label)+"\n            ")]:_vm._e(),_vm._v(" "+_vm._s(_vm.offsetValue)+"%\n        ")],2):_c('span',[_vm._t("default")],2)])])}
+var ProgressBarvue_type_template_id_2456986c_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Functions/unit.js
+var unit = __webpack_require__("0f2b");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/Variant/index.js + 1 modules
+var Variant = __webpack_require__("485b");
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Mixins/MergeClasses/index.js + 1 modules
+var MergeClasses = __webpack_require__("bc02");
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ var ProgressBarvue_type_script_lang_js_ = ({
+
+    name: 'ProgressBar',
+
+    mixins: [
+        Variant["a" /* default */],
+        MergeClasses["a" /* default */]
+    ],
+
+    props: {
+
+        /**
+         * A custom color to be applied inline in the styles vs a contextual
+         * variant.
+         *
+         * @property String
+         */
+        color: String,
+
+        /**
+         * The progress bar percentage value
+         *
+         * @property String
+         */
+        value: {
+            type: Number,
+            required: true
+        },
+
+        /**
+         * The height of the progress bar
+         *
+         * @property String
+         */
+        height: [Number, String],
+
+        /**
+         * Show the progress bar value as a label inside the bar
+         *
+         * @property String
+         */
+        label: [String, Boolean],
+
+        /**
+         * Should the progress bar appear with stripes
+         *
+         * @property String
+         */
+        striped: Boolean,
+
+        /**
+         * Should the progress bar appear with animated stripes
+         *
+         * @property String
+         */
+        animated: Boolean,
+
+        /**
+         * The minimum value
+         *
+         * @property String
+         */
+        min: {
+            type: Number,
+            default: 0
+        },
+
+        /**
+         * The max value
+         *
+         * @property String
+         */
+        max: {
+            type: Number,
+            default: 100
+        }
+
+    },
+
+    computed: {
+
+        variantClassPrefix() {
+            return 'bg';
+        },
+
+        offsetValue() {
+            return this.value / this.max * 100;
+        },
+
+        formattedHeight() {
+            return this.height ? Object(unit["a" /* default */])(this.height) : null;
+        },
+
+        progressClasses() {
+            return {
+                'progress-bar-striped': this.striped,
+                'progress-bar-animated': this.animated
+            };
+        },
+
+        styles() {
+            return {
+                width: `${this.offsetValue}%`,
+                background: `${this.color} !important`
+            };
+        }
+
+    }
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=script&lang=js&
+ /* harmony default export */ var ProgressBar_ProgressBarvue_type_script_lang_js_ = (ProgressBarvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue
+
+
+
+
+
+/* normalize component */
+
+var ProgressBar_component = Object(componentNormalizer["a" /* default */])(
+  ProgressBar_ProgressBarvue_type_script_lang_js_,
+  ProgressBarvue_type_template_id_2456986c_render,
+  ProgressBarvue_type_template_id_2456986c_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var ProgressBar = (ProgressBar_component.exports);
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/ProgressBar/index.js
+
+/* harmony default export */ var Components_ProgressBar = (ProgressBar);
+
+// EXTERNAL MODULE: ./node_modules/vue-interface/src/Helpers/Transition/index.js + 1 modules
+var Transition = __webpack_require__("d555");
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+/* harmony default export */ var Alertvue_type_script_lang_js_ = ({
+
+    name: 'Alert',
+
+    components: {
+        AlertClose: AlertClose,
+        AlertHeading: AlertHeading,
+        ProgressBar: Components_ProgressBar
+    },
+
+    mixins: [
+        Variant["a" /* default */],
+        MergeClasses["a" /* default */]
+    ],
+
+    props: {
+
+        /**
+         * Is the alert dismissible
+         *
+         * @property Boolean
+         */
+        dismissible: Boolean,
+
+        /**
+         * The alert's title/heading
+         *
+         * @property Boolean
+         */
+        heading: String,
+
+        /**
+         * The alert's title/heading
+         *
+         * @property Boolean
+         */
+        title: String,
+
+        /**
+         * Should the alert fade when hidden
+         *
+         * @property Boolean
+         */
+        fade: {
+            type: Boolean,
+            default: true
+        },
+
+        /**
+         * Should the alert be visible by default. If passed a number, alert
+         * will be shown for the number of seconds that are passed.
+         *
+         * @property Boolean
+         */
+        show: {
+            type: [Number, Boolean],
+            default: true
+        }
+
+    },
+
+    data() {
+        return {
+            dismissCount: this.show,
+            isVisible: this.show
+        };
+    },
+
+    mounted() {
+        if(typeof this.show === 'number') {
+            const el = this.$el.querySelector('.progress-bar');
+
+            this.$emit('dismiss-countdown', this.dismissCount = this.show);
+
+            const interval = setInterval(() => {
+                this.$emit('dismiss-countdown', this.dismissCount -= 1);
+
+                if(!this.dismissCount) {
+                    clearInterval(interval);
+                    Object(Transition["a" /* default */])(el).then(delay => this.dismiss());
+                }
+            }, 1000);
+        }
+    },
+
+    methods: {
+
+        dismiss() {
+            this.isVisible = false;
+
+            Object(Transition["a" /* default */])(this.$el).then(delay => {
+                this.$emit('dismiss');
+            });
+        }
+
+    }
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=script&lang=js&
+ /* harmony default export */ var Alert_Alertvue_type_script_lang_js_ = (Alertvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue
+
+
+
+
+
+/* normalize component */
+
+var Alert_component = Object(componentNormalizer["a" /* default */])(
+  Alert_Alertvue_type_script_lang_js_,
+  Alertvue_type_template_id_44f91d03_render,
+  Alertvue_type_template_id_44f91d03_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var Alert = (Alert_component.exports);
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
+var AlertLinkvue_type_template_id_31ebd2b6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('a',{staticClass:"alert-link"},[_vm._t("default")],2)}
+var AlertLinkvue_type_template_id_31ebd2b6_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ var AlertLinkvue_type_script_lang_js_ = ({
+
+    name: 'AlertLink'
+
+});
+
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=script&lang=js&
+ /* harmony default export */ var Alert_AlertLinkvue_type_script_lang_js_ = (AlertLinkvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/AlertLink.vue
+
+
+
+
+
+/* normalize component */
+
+var AlertLink_component = Object(componentNormalizer["a" /* default */])(
+  Alert_AlertLinkvue_type_script_lang_js_,
+  AlertLinkvue_type_template_id_31ebd2b6_render,
+  AlertLinkvue_type_template_id_31ebd2b6_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var AlertLink = (AlertLink_component.exports);
+// CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/index.js
+
+
+
+
+
+
+
+/* harmony default export */ var Components_Alert = (Alert);
 
 // EXTERNAL MODULE: ./node_modules/@fortawesome/free-solid-svg-icons/index.es.js
 var index_es = __webpack_require__("c074");
@@ -5687,7 +5782,7 @@ library.add(faClipboardCheck);
   name: 'HttpException',
   components: {
     Icon: vue_fontawesome_index_es["a" /* FontAwesomeIcon */],
-    Alert: Alert["a" /* default */]
+    Alert: Components_Alert
   },
   props: {
     error: Error,
@@ -5699,9 +5794,6 @@ library.add(faClipboardCheck);
 // EXTERNAL MODULE: ./src/Components/HttpException.vue?vue&type=style&index=0&lang=scss&
 var HttpExceptionvue_type_style_index_0_lang_scss_ = __webpack_require__("9d49");
 
-// EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-var componentNormalizer = __webpack_require__("2877");
-
 // CONCATENATED MODULE: ./src/Components/HttpException.vue
 
 
@@ -5711,7 +5803,7 @@ var componentNormalizer = __webpack_require__("2877");
 
 /* normalize component */
 
-var component = Object(componentNormalizer["a" /* default */])(
+var HttpException_component = Object(componentNormalizer["a" /* default */])(
   Components_HttpExceptionvue_type_script_lang_js_,
   render,
   staticRenderFns,
@@ -5722,7 +5814,7 @@ var component = Object(componentNormalizer["a" /* default */])(
   
 )
 
-/* harmony default export */ var HttpException = __webpack_exports__["a"] = (component.exports);
+/* harmony default export */ var HttpException = __webpack_exports__["a"] = (HttpException_component.exports);
 
 /***/ }),
 
@@ -5760,7 +5852,7 @@ function key(value) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-hourglass/src/Hourglass.vue?vue&type=template&id=db25ab82&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-hourglass/src/Hourglass.vue?vue&type=template&id=db25ab82&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"hourglass",class:_vm.classes,style:({animationDuration: ((this.duration) + "ms")})},[_c('div',{staticClass:"hourglass-icon"},[_c('div',{staticClass:"hourglass-empty"},[_c('icon',{attrs:{"icon":['far', 'hourglass'],"size":_vm.size}})],1),_c('div',{staticClass:"hourglass-full"},[_c('icon',{attrs:{"icon":"hourglass","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-start"},[_c('icon',{attrs:{"icon":"hourglass-start","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-half"},[_c('icon',{attrs:{"icon":"hourglass-half","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-end"},[_c('icon',{attrs:{"icon":"hourglass-end","size":_vm.size}})],1)]),(_vm.label)?_c('div',{staticClass:"hourglass-label"},[_vm._v(_vm._s(_vm.label))]):_vm._e()])}
 var staticRenderFns = []
 
@@ -7020,7 +7112,7 @@ function revision(data = {}, options) {
 // CONCATENATED MODULE: ./src/Helpers/Functions/zip.js
 function zip(contents, filename) {
   return new Promise((resolve, reject) => {
-    Promise.all(/* import() */[__webpack_require__.e(4), __webpack_require__.e(9)]).then(__webpack_require__.t.bind(null, "7c39", 7)).then(module => {
+    Promise.all(/* import() */[__webpack_require__.e(3), __webpack_require__.e(9)]).then(__webpack_require__.t.bind(null, "7c39", 7)).then(module => {
       var zip = new module.default();
       zip.folder(filename.replace(/\.html$/, '')).file(filename, contents);
       zip.generateAsync({
@@ -18817,7 +18909,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ErrorReport.vue?vue&type=template&id=1a30a73d&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ErrorReport.vue?vue&type=template&id=1a30a73d&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.lint)?_c('router-view',{attrs:{"lint":_vm.lint,"api-key":_vm.apiKey}}):(!_vm.error)?_c('div',{staticClass:"position-absolute d-flex justify-content-center align-items-center h-100 w-100"},[_c('hourglass',{attrs:{"label":"Checking for errors...","animate":"","size":"2x"}})],1):_c('http-exception',{attrs:{"error":_vm.error}})}
 var staticRenderFns = []
 
@@ -21442,7 +21534,7 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ var vue_router_esm = (VueRouter);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"05d2f004-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Views/Home.vue?vue&type=template&id=89a98e6a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5a10c13e-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Views/Home.vue?vue&type=template&id=89a98e6a&
 var Homevue_type_template_id_89a98e6a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('div',{staticClass:"bug-report mt-5"},[_c('header',{staticClass:"bug-report-logo"},[_c('animate-css',{attrs:{"name":"zoom","left":"","enter":"zoomInLeft","leave":"zoomOutRight"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-mark",attrs:{"src":__webpack_require__("5f9a")}}):_vm._e()]),_c('animate-css',{attrs:{"name":"fade","delay":".5s"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-text",attrs:{"src":__webpack_require__("b798")}}):_vm._e()])],1),(_vm.mounted)?_c('router-view',{attrs:{"api-key":_vm.apiKey,"lint":_vm.lint}}):_vm._e()],1)])}
 var Homevue_type_template_id_89a98e6a_staticRenderFns = []
 
@@ -21551,7 +21643,7 @@ external_commonjs_vue_commonjs2_vue_root_Vue_default.a.use(vue_router_esm);
   }, {
     path: '/fix',
     name: 'fix',
-    component: () => Promise.all(/* import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, "03bf"))
+    component: () => Promise.all(/* import() */[__webpack_require__.e(0), __webpack_require__.e(4), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, "03bf"))
   }]
 }));
 // EXTERNAL MODULE: ./node_modules/@bugsnag/js/browser/notifier.js
@@ -21568,7 +21660,7 @@ var Functions = __webpack_require__("b360");
 var bugsnag_vue = __webpack_require__("3181");
 var bugsnag_vue_default = /*#__PURE__*/__webpack_require__.n(bugsnag_vue);
 
-// EXTERNAL MODULE: ./src/Components/HttpException.vue + 4 modules
+// EXTERNAL MODULE: ./src/Components/HttpException.vue + 31 modules
 var HttpException = __webpack_require__("5eb8");
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ErrorReport.vue?vue&type=script&lang=js&
