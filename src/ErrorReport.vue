@@ -91,7 +91,7 @@ export default {
                 html: this.html,
                 filename: this.filename
             }, {
-                baseURL: `http://api.thecapsule.${this.environment === 'production' ? 'com' : 'test'}/v1`,
+                baseURL: `http://api.thecapsule.${this.environment === 'production' ? 'email' : 'test'}/v1`,
                 headers: {
                     Authorization: `Bearer ${this.apiKey}`
                 }
