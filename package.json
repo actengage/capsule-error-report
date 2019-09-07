@@ -1,6 +1,6 @@
 {
   "name": "capsule-error-report",
-  "version": "0.9.12",
+  "version": "0.9.13",
   "module": "./src/index.js",
   "main": "./dist/CapsuleErrorReport.umd.min.js",
   "scripts": {
