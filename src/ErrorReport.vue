@@ -46,11 +46,8 @@ export default {
         },
 
         team: {
-            type: Object,
-            required: true,
-            validate({ id }) {
-                return !!id;
-            }
+            type: [Number, Object],
+            required: true
         },
 
         environment: {

@@ -45,7 +45,7 @@ export default {
         },
 
         team: {
-            type: Object,
+            type: [Number, Object],
             required: true
         }
         
