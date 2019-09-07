@@ -97,8 +97,8 @@ export default {
         if(!this.lint) {
             lint({
                 html: this.html,
-                team_id: this.team.id,
-                filename: this.filename
+                filename: this.filename,
+                team_id: typeof this.team === 'object' ? this.team.id : this.team
             }, {
                 baseURL: `http://api.thecapsule.${this.environment === 'production' ? 'email' : 'test'}/v1`,
                 headers: {

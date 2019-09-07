@@ -4,6 +4,7 @@
         ref="editor"
         demo-mode
         v-model="editor"
+        :team="team"
         :errors="lint.errors"
         :filename="lint.filename"
         :api-key="apiKey"
@@ -212,10 +213,10 @@ export default {
                 this.hourGlassLabel = 'Sending...';
 
                 revision({
-                    team_id: this.team.id,
                     filename: this.currentFilename,
                     revised_html: this.currentContents,
-                    original_html: this.originalContents
+                    original_html: this.originalContents,
+                    team_id: typeof this.team === 'object' ? this.team.id : this.team
                 }, this.httpRequestOptions).then(response => {
                     throttled(() => {
                         this.active = 1
@@ -299,6 +300,7 @@ export default {
     },
 
     mounted() {
+        /*
         this.$nextTick(() => {
             const { line, ch, code } = this.$route.query;
 
@@ -308,6 +310,7 @@ export default {
                 }
             });
         });
+        */
     }
 
 };
