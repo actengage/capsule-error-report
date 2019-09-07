@@ -13,7 +13,7 @@
                 </animate-css>
             </header>
 
-            <router-view v-if="mounted" :api-key="apiKey" :lint="lint" />
+            <router-view v-if="mounted" :api-key="apiKey" :lint="lint" :team="team" />
             
         </div>
 

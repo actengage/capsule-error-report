@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './Views/Home';
 
 Vue.use(Router);
 
@@ -9,20 +8,20 @@ export default new Router({
     routes: [
         {
             path: '/',
-            component: Home,
+            component: () => import(/* webpackChunkName: 'home' */'./View/Home.vue'),
             children: [{
                 path: '',
                 name: 'home',
-                component: () => import('./Components/BugReport.vue'),
+                component: () => import(/* webpackChunkName: 'bug-report' */'./Components/BugReport.vue'),
             },{
                 path: '/contact',
                 name: 'contact',
-                component: () => import('./Components/ContactForm.vue'),
+                component: () => import(/* webpackChunkName: 'contact-form' */'./Components/ContactForm.vue'),
             }]
         },{
             path: '/fix',
             name: 'fix',
-            component: () => import('./Components/Editor.vue')
+            component: () => import(/* webpackChunkName: 'editor' */'./Components/Editor.vue')
         }
     ]
 });
