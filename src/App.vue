@@ -3,6 +3,7 @@
         <error-report
             filename="test.html"
             environment="development"
+            :team="{id: 1, name: 'Active Engagement'}"
             :api-key="apiKey"
             :errors="errors">
             <textarea>

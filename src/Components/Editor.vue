@@ -130,6 +130,11 @@ export default {
             required: true
         },
 
+        team: {
+            type: Object,
+            required: true
+        },
+
         errors: Array,
 
         apiKey: {
@@ -208,6 +213,7 @@ export default {
                 this.hourGlassLabel = 'Sending...';
 
                 revision({
+                    team_id: this.team.id,
                     filename: this.currentFilename,
                     revised_html: this.currentContents,
                     original_html: this.originalContents

@@ -93,6 +93,11 @@ export default {
         lint: {
             type: Object,
             required: true
+        },
+
+        team: {
+            type: Object,
+            required: true
         }
         
     },

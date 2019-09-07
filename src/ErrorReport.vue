@@ -1,6 +1,6 @@
 <template>
 
-    <router-view v-if="lint" :lint="lint" :api-key="apiKey" />
+    <router-view v-if="lint" :lint="lint" :api-key="apiKey" :team="team" />
 
     <div v-else-if="!error" class="position-absolute d-flex justify-content-center align-items-center h-100 w-100">
         <hourglass label="Checking for errors..." animate size="2x" />
@@ -43,6 +43,14 @@ export default {
         apiKey: {
             type: String,
             required: true
+        },
+
+        team: {
+            type: Object,
+            required: true,
+            validate({ id }) {
+                return !!id;
+            }
         },
 
         environment: {
@@ -89,6 +97,7 @@ export default {
         if(!this.lint) {
             lint({
                 html: this.html,
+                team_id: this.team.id,
                 filename: this.filename
             }, {
                 baseURL: `http://api.thecapsule.${this.environment === 'production' ? 'email' : 'test'}/v1`,

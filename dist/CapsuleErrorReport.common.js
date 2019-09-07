@@ -5088,7 +5088,7 @@ function kebabCase(str) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/AnimateCss/AnimateCss.vue?vue&type=template&id=1b6b5aa0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/AnimateCss/AnimateCss.vue?vue&type=template&id=1b6b5aa0&
 var render = function () {
 var this$1 = this;
 var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"mode":_vm.mode,"duration":_vm.duration,"enter-class":_vm.enterClass,"enter-to-class":_vm.enterToClass,"enter-active-class":_vm.enterActiveClassName,"leave-class":_vm.leaveClass,"leave-to-class":_vm.leaveToClass,"leave-active-class":_vm.leaveActiveClassName},on:{"before-enter":function () {
@@ -5336,21 +5336,21 @@ var component = Object(componentNormalizer["a" /* default */])(
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"http-exception",class:{ fixed: _vm.fixed }},[_c('div',{staticClass:"d-flex flex-column justify-content-center align-items-center w-100 h-100"},[_c('div',{staticClass:"http-exception-content my-5"},[_c('div',{staticClass:"text-center mx-5 mb-3 p-4"},[_c('icon',{attrs:{"icon":"bomb","size":"6x"}})],1),_c('h1',{staticClass:"font-weight-light mb-4"},[_vm._v("Something went wrong....")]),_c('alert',[_c('h4',{staticClass:"font-weight-light m-3"},[_vm._v(_vm._s(_vm.error))]),_c('ul',{staticClass:"mt-3"},[_vm._l((_vm.error.response.data.errors),function(errors){return _vm._l((errors),function(error,i){return _c('li',{key:i},[_c('h5',[_vm._v(_vm._s(error))])])})})],2)]),_vm._t("default")],2)])])}
 var staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./src/Components/HttpException.vue?vue&type=template&id=5b10d2d1&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
 var Alertvue_type_template_id_44f91d03_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"alert",class:_vm.mergeClasses(_vm.variantClass, {show: _vm.isVisible, fade: _vm.fade}),attrs:{"role":"alert"}},[(_vm.dismissible)?_c('alert-close',{on:{"click":function($event){return _vm.dismiss()}}}):_vm._e(),(_vm.title || _vm.heading)?_c('alert-heading',[_vm._v("\n        "+_vm._s(_vm.title || _vm.heading)+"\n    ")]):_vm._e(),_vm._t("default"),(typeof _vm.show === 'number')?_c('progress-bar',{staticClass:"my-3",attrs:{"variant":_vm.variant,"height":5,"value":_vm.dismissCount,"max":_vm.show}}):_vm._e()],2)}
 var Alertvue_type_template_id_44f91d03_staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./node_modules/vue-interface/src/Components/Alert/Alert.vue?vue&type=template&id=44f91d03&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertClose.vue?vue&type=template&id=09567316&
 var AlertClosevue_type_template_id_09567316_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{staticClass:"close",attrs:{"type":"button","data-dismiss":"alert","aria-label":"Close"},on:{"click":_vm.onClick}},[_c('span',{attrs:{"aria-hidden":"true"}},[_vm._v("\n        ×\n    ")])])}
 var AlertClosevue_type_template_id_09567316_staticRenderFns = []
 
@@ -5406,7 +5406,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* harmony default export */ var AlertClose = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertHeading.vue?vue&type=template&id=78ba96e0&
 var AlertHeadingvue_type_template_id_78ba96e0_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h4',{staticClass:"alert-heading"},[_vm._t("default")],2)}
 var AlertHeadingvue_type_template_id_78ba96e0_staticRenderFns = []
 
@@ -5449,7 +5449,7 @@ var AlertHeading_component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* harmony default export */ var AlertHeading = (AlertHeading_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/ProgressBar/ProgressBar.vue?vue&type=template&id=2456986c&
 var ProgressBarvue_type_template_id_2456986c_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"progress",style:({'height': _vm.formattedHeight})},[_c('div',{staticClass:"progress-bar",class:_vm.mergeClasses(_vm.progressClasses, _vm.variantClass),style:(_vm.styles),attrs:{"role":"progressbar","aria-valuenow":_vm.offsetValue,"aria-valuemin":_vm.min,"aria-valuemax":_vm.max}},[(!!_vm.label)?_c('span',[(_vm.label !== true)?[_vm._v("\n                "+_vm._s(_vm.label)+"\n            ")]:_vm._e(),_vm._v(" "+_vm._s(_vm.offsetValue)+"%\n        ")],2):_c('span',[_vm._t("default")],2)])])}
 var ProgressBarvue_type_template_id_2456986c_staticRenderFns = []
 
@@ -5780,7 +5780,7 @@ var Alert_component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* harmony default export */ var Alert = (Alert_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-interface/src/Components/Alert/AlertLink.vue?vue&type=template&id=31ebd2b6&
 var AlertLinkvue_type_template_id_31ebd2b6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('a',{staticClass:"alert-link"},[_vm._t("default")],2)}
 var AlertLinkvue_type_template_id_31ebd2b6_staticRenderFns = []
 
@@ -5952,7 +5952,7 @@ function key(value) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-hourglass/src/Hourglass.vue?vue&type=template&id=db25ab82&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-hourglass/src/Hourglass.vue?vue&type=template&id=db25ab82&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"hourglass",class:_vm.classes,style:({animationDuration: ((this.duration) + "ms")})},[_c('div',{staticClass:"hourglass-icon"},[_c('div',{staticClass:"hourglass-empty"},[_c('icon',{attrs:{"icon":['far', 'hourglass'],"size":_vm.size}})],1),_c('div',{staticClass:"hourglass-full"},[_c('icon',{attrs:{"icon":"hourglass","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-start"},[_c('icon',{attrs:{"icon":"hourglass-start","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-half"},[_c('icon',{attrs:{"icon":"hourglass-half","size":_vm.size}})],1),_c('div',{staticClass:"hourglass-end"},[_c('icon',{attrs:{"icon":"hourglass-end","size":_vm.size}})],1)]),(_vm.label)?_c('div',{staticClass:"hourglass-label"},[_vm._v(_vm._s(_vm.label))]):_vm._e()])}
 var staticRenderFns = []
 
@@ -6918,7 +6918,7 @@ function classList(props) {
     'fa-li': props.listItem,
     'fa-flip-horizontal': props.flip === 'horizontal' || props.flip === 'both',
     'fa-flip-vertical': props.flip === 'vertical' || props.flip === 'both'
-  }, defineProperty(_classes, 'fa-' + props.size, props.size !== null), defineProperty(_classes, 'fa-rotate-' + props.rotation, props.rotation !== null), defineProperty(_classes, 'fa-pull-' + props.pull, props.pull !== null), _classes);
+  }, defineProperty(_classes, 'fa-' + props.size, props.size !== null), defineProperty(_classes, 'fa-rotate-' + props.rotation, props.rotation !== null), defineProperty(_classes, 'fa-pull-' + props.pull, props.pull !== null), defineProperty(_classes, 'fa-swap-opacity', props.swapOpacity), _classes);
 
   return Object.keys(classes).map(function (key) {
     return classes[key] ? key : null;
@@ -7001,6 +7001,10 @@ var FontAwesomeIcon = {
       validator: function validator(value) {
         return [90, 180, 270].indexOf(parseInt(value, 10)) > -1;
       }
+    },
+    swapOpacity: {
+      type: Boolean,
+      default: false
     },
     size: {
       type: String,
@@ -19475,12 +19479,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ErrorReport.vue?vue&type=template&id=8f84b550&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.lint)?_c('router-view',{attrs:{"lint":_vm.lint,"api-key":_vm.apiKey}}):(!_vm.error)?_c('div',{staticClass:"position-absolute d-flex justify-content-center align-items-center h-100 w-100"},[_c('hourglass',{attrs:{"label":"Checking for errors...","animate":"","size":"2x"}})],1):_c('http-exception',{attrs:{"error":_vm.error}})}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ErrorReport.vue?vue&type=template&id=4de1bb4a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.lint)?_c('router-view',{attrs:{"lint":_vm.lint,"api-key":_vm.apiKey,"team":_vm.team}}):(!_vm.error)?_c('div',{staticClass:"position-absolute d-flex justify-content-center align-items-center h-100 w-100"},[_c('hourglass',{attrs:{"label":"Checking for errors...","animate":"","size":"2x"}})],1):_c('http-exception',{attrs:{"error":_vm.error}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/ErrorReport.vue?vue&type=template&id=8f84b550&
+// CONCATENATED MODULE: ./src/ErrorReport.vue?vue&type=template&id=4de1bb4a&
 
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
@@ -19491,7 +19495,7 @@ var axios = __webpack_require__("bc3a");
 
 // CONCATENATED MODULE: ./node_modules/vue-router/dist/vue-router.esm.js
 /*!
-  * vue-router v3.1.2
+  * vue-router v3.1.3
   * (c) 2019 Evan You
   * @license MIT
   */
@@ -19630,7 +19634,7 @@ var View = {
 
     return h(component, data, children)
   }
-}
+};
 
 function resolveProps (route, config) {
   switch (typeof config) {
@@ -19753,7 +19757,7 @@ function createRoute (
   redirectedFrom,
   router
 ) {
-  var stringifyQuery$$1 = router && router.options.stringifyQuery;
+  var stringifyQuery = router && router.options.stringifyQuery;
 
   var query = location.query || {};
   try {
@@ -19767,11 +19771,11 @@ function createRoute (
     hash: location.hash || '',
     query: query,
     params: location.params || {},
-    fullPath: getFullPath(location, stringifyQuery$$1),
+    fullPath: getFullPath(location, stringifyQuery),
     matched: record ? formatMatch(record) : []
   };
   if (redirectedFrom) {
-    route.redirectedFrom = getFullPath(redirectedFrom, stringifyQuery$$1);
+    route.redirectedFrom = getFullPath(redirectedFrom, stringifyQuery);
   }
   return Object.freeze(route)
 }
@@ -20589,7 +20593,24 @@ var Link = {
         // in case the <a> is a static node
         a.isStatic = false;
         var aData = (a.data = extend({}, a.data));
-        aData.on = on;
+        aData.on = aData.on || {};
+        // transform existing events in both objects into arrays so we can push later
+        for (var event in aData.on) {
+          var handler$1 = aData.on[event];
+          if (event in on) {
+            aData.on[event] = Array.isArray(handler$1) ? handler$1 : [handler$1];
+          }
+        }
+        // append new listeners for router-link
+        for (var event$1 in on) {
+          if (event$1 in aData.on) {
+            // on[event] is always a function
+            aData.on[event$1].push(on[event$1]);
+          } else {
+            aData.on[event$1] = handler;
+          }
+        }
+
         var aAttrs = (a.data.attrs = extend({}, a.data.attrs));
         aAttrs.href = href;
       } else {
@@ -20600,7 +20621,7 @@ var Link = {
 
     return h(this.tag, data, this.$slots.default)
   }
-}
+};
 
 function guardEvent (e) {
   // don't redirect with control keys
@@ -20717,6 +20738,8 @@ function createRouteMap (
       i--;
     }
   }
+
+  if (false) { var pathNames, found; }
 
   return {
     pathList: pathList,
@@ -21018,6 +21041,28 @@ function resolveRecordPath (path, record) {
 
 /*  */
 
+// use User Timing api (if present) for more accurate key precision
+var Time =
+  inBrowser && window.performance && window.performance.now
+    ? window.performance
+    : Date;
+
+function genStateKey () {
+  return Time.now().toFixed(3)
+}
+
+var _key = genStateKey();
+
+function getStateKey () {
+  return _key
+}
+
+function setStateKey (key) {
+  return (_key = key)
+}
+
+/*  */
+
 var positionStore = Object.create(null);
 
 function setupScroll () {
@@ -21163,39 +21208,22 @@ function scrollToPosition (shouldScroll, position) {
 
 /*  */
 
-var supportsPushState = inBrowser && (function () {
-  var ua = window.navigator.userAgent;
+var supportsPushState =
+  inBrowser &&
+  (function () {
+    var ua = window.navigator.userAgent;
 
-  if (
-    (ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) &&
-    ua.indexOf('Mobile Safari') !== -1 &&
-    ua.indexOf('Chrome') === -1 &&
-    ua.indexOf('Windows Phone') === -1
-  ) {
-    return false
-  }
+    if (
+      (ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) &&
+      ua.indexOf('Mobile Safari') !== -1 &&
+      ua.indexOf('Chrome') === -1 &&
+      ua.indexOf('Windows Phone') === -1
+    ) {
+      return false
+    }
 
-  return window.history && 'pushState' in window.history
-})();
-
-// use User Timing api (if present) for more accurate key precision
-var Time = inBrowser && window.performance && window.performance.now
-  ? window.performance
-  : Date;
-
-var _key = genKey();
-
-function genKey () {
-  return Time.now().toFixed(3)
-}
-
-function getStateKey () {
-  return _key
-}
-
-function setStateKey (key) {
-  _key = key;
-}
+    return window.history && 'pushState' in window.history
+  })();
 
 function pushState (url, replace) {
   saveScrollPosition();
@@ -21204,10 +21232,9 @@ function pushState (url, replace) {
   var history = window.history;
   try {
     if (replace) {
-      history.replaceState({ key: _key }, '', url);
+      history.replaceState({ key: getStateKey() }, '', url);
     } else {
-      _key = genKey();
-      history.pushState({ key: _key }, '', url);
+      history.pushState({ key: setStateKey(genStateKey()) }, '', url);
     }
   } catch (e) {
     window.location[replace ? 'replace' : 'assign'](url);
@@ -21347,9 +21374,20 @@ function once (fn) {
 }
 
 var NavigationDuplicated = /*@__PURE__*/(function (Error) {
-  function NavigationDuplicated () {
-    Error.call(this, 'Navigating to current location is not allowed');
+  function NavigationDuplicated (normalizedLocation) {
+    Error.call(this);
     this.name = this._name = 'NavigationDuplicated';
+    // passing the message to super() doesn't seem to work in the transpiled version
+    this.message = "Navigating to current location (\"" + (normalizedLocation.fullPath) + "\") is not allowed";
+    // add a stack property so services like Sentry can correctly display it
+    Object.defineProperty(this, 'stack', {
+      value: new Error().stack,
+      writable: true,
+      configurable: true
+    });
+    // we could also have used
+    // Error.captureStackTrace(this, this.constructor)
+    // but it only exists on node and chrome
   }
 
   if ( Error ) NavigationDuplicated.__proto__ = Error;
@@ -21689,11 +21727,11 @@ function poll (
 
 /*  */
 
-var HTML5History = /*@__PURE__*/(function (History$$1) {
+var HTML5History = /*@__PURE__*/(function (History) {
   function HTML5History (router, base) {
     var this$1 = this;
 
-    History$$1.call(this, router, base);
+    History.call(this, router, base);
 
     var expectScroll = router.options.scrollBehavior;
     var supportsScroll = supportsPushState && expectScroll;
@@ -21721,8 +21759,8 @@ var HTML5History = /*@__PURE__*/(function (History$$1) {
     });
   }
 
-  if ( History$$1 ) HTML5History.__proto__ = History$$1;
-  HTML5History.prototype = Object.create( History$$1 && History$$1.prototype );
+  if ( History ) HTML5History.__proto__ = History;
+  HTML5History.prototype = Object.create( History && History.prototype );
   HTML5History.prototype.constructor = HTML5History;
 
   HTML5History.prototype.go = function go (n) {
@@ -21777,9 +21815,9 @@ function getLocation (base) {
 
 /*  */
 
-var HashHistory = /*@__PURE__*/(function (History$$1) {
+var HashHistory = /*@__PURE__*/(function (History) {
   function HashHistory (router, base, fallback) {
-    History$$1.call(this, router, base);
+    History.call(this, router, base);
     // check history fallback deeplinking
     if (fallback && checkFallback(this.base)) {
       return
@@ -21787,8 +21825,8 @@ var HashHistory = /*@__PURE__*/(function (History$$1) {
     ensureSlash();
   }
 
-  if ( History$$1 ) HashHistory.__proto__ = History$$1;
-  HashHistory.prototype = Object.create( History$$1 && History$$1.prototype );
+  if ( History ) HashHistory.__proto__ = History;
+  HashHistory.prototype = Object.create( History && History.prototype );
   HashHistory.prototype.constructor = HashHistory;
 
   // this is delayed until the app mounts
@@ -21942,15 +21980,15 @@ function replaceHash (path) {
 
 /*  */
 
-var AbstractHistory = /*@__PURE__*/(function (History$$1) {
+var AbstractHistory = /*@__PURE__*/(function (History) {
   function AbstractHistory (router, base) {
-    History$$1.call(this, router, base);
+    History.call(this, router, base);
     this.stack = [];
     this.index = -1;
   }
 
-  if ( History$$1 ) AbstractHistory.__proto__ = History$$1;
-  AbstractHistory.prototype = Object.create( History$$1 && History$$1.prototype );
+  if ( History ) AbstractHistory.__proto__ = History;
+  AbstractHistory.prototype = Object.create( History && History.prototype );
   AbstractHistory.prototype.constructor = AbstractHistory;
 
   AbstractHistory.prototype.push = function push (location, onComplete, onAbort) {
@@ -22239,7 +22277,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.1.2';
+VueRouter.version = '3.1.3';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
@@ -22247,12 +22285,12 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ var vue_router_esm = (VueRouter);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Views/Home.vue?vue&type=template&id=89a98e6a&
-var Homevue_type_template_id_89a98e6a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('div',{staticClass:"bug-report mt-5"},[_c('header',{staticClass:"bug-report-logo"},[_c('animate-css',{attrs:{"name":"zoom","left":"","enter":"zoomInLeft","leave":"zoomOutRight"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-mark",attrs:{"src":__webpack_require__("5f9a")}}):_vm._e()]),_c('animate-css',{attrs:{"name":"fade","delay":".5s"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-text",attrs:{"src":__webpack_require__("b798")}}):_vm._e()])],1),(_vm.mounted)?_c('router-view',{attrs:{"api-key":_vm.apiKey,"lint":_vm.lint}}):_vm._e()],1)])}
-var Homevue_type_template_id_89a98e6a_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Views/Home.vue?vue&type=template&id=62cc8d4a&
+var Homevue_type_template_id_62cc8d4a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"container"},[_c('div',{staticClass:"bug-report mt-5"},[_c('header',{staticClass:"bug-report-logo"},[_c('animate-css',{attrs:{"name":"zoom","left":"","enter":"zoomInLeft","leave":"zoomOutRight"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-mark",attrs:{"src":__webpack_require__("5f9a")}}):_vm._e()]),_c('animate-css',{attrs:{"name":"fade","delay":".5s"}},[(_vm.mounted)?_c('img',{staticClass:"img-fluid bug-report-logo-text",attrs:{"src":__webpack_require__("b798")}}):_vm._e()])],1),(_vm.mounted)?_c('router-view',{attrs:{"api-key":_vm.apiKey,"lint":_vm.lint}}):_vm._e()],1)])}
+var Homevue_type_template_id_62cc8d4a_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Views/Home.vue?vue&type=template&id=89a98e6a&
+// CONCATENATED MODULE: ./src/Views/Home.vue?vue&type=template&id=62cc8d4a&
 
 // EXTERNAL MODULE: ./node_modules/vue-interface/src/Components/AnimateCss/index.js + 5 modules
 var AnimateCss = __webpack_require__("566e");
@@ -22295,6 +22333,10 @@ var AnimateCss = __webpack_require__("566e");
     lint: {
       type: Object,
       required: true
+    },
+    team: {
+      type: Object,
+      required: true
     }
   },
 
@@ -22324,8 +22366,8 @@ var componentNormalizer = __webpack_require__("2877");
 
 var component = Object(componentNormalizer["a" /* default */])(
   Views_Homevue_type_script_lang_js_,
-  Homevue_type_template_id_89a98e6a_render,
-  Homevue_type_template_id_89a98e6a_staticRenderFns,
+  Homevue_type_template_id_62cc8d4a_render,
+  Homevue_type_template_id_62cc8d4a_staticRenderFns,
   false,
   null,
   null,
@@ -22414,6 +22456,17 @@ notifier_default()({
       type: String,
       required: true
     },
+    team: {
+      type: Object,
+      required: true,
+
+      validate({
+        id
+      }) {
+        return !!id;
+      }
+
+    },
     environment: {
       type: String,
 
@@ -22452,6 +22505,7 @@ notifier_default()({
     if (!this.lint) {
       Object(Functions["b" /* lint */])({
         html: this.html,
+        team_id: this.team.id,
         filename: this.filename
       }, {
         baseURL: `http://api.thecapsule.${this.environment === 'production' ? 'email' : 'test'}/v1`,

@@ -6,12 +6,12 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0f6dbdc4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/Editor.vue?vue&type=template&id=49fff850&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"356025c4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/Components/Editor.vue?vue&type=template&id=fb18c374&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('capsule-editor',{ref:"editor",attrs:{"demo-mode":"","errors":_vm.lint.errors,"filename":_vm.lint.filename,"api-key":_vm.apiKey,"contents":_vm.lint.html,"environment":_vm.environment},on:{"lint-errors":_vm.onLintError,"lint-success":_vm.onLintSuccess,"close":function($event){return _vm.$router.push({name: 'home'})}},scopedSlots:_vm._u([{key:"success",fn:function(){return [_c('slide-deck',{attrs:{"active":_vm.active}},[_c('div',{key:0},[_c('div',{staticClass:"text-center position-relative"},[_c('animate-css',{attrs:{"name":"fade","up":"","leave-active-class":"position-absolute w-100 h-100"}},[(!_vm.activity && !_vm.error)?_c('div',[_c('img',{staticClass:"capsule-editor-modal-logo",attrs:{"src":__webpack_require__("5f9a")}}),_c('h1',{staticClass:"font-weight-light mb-4"},[_vm._v("Document Fixed!")]),_c('h5',{staticClass:"font-weight-light mb-4 mx-5"},[_vm._v("Do you want to automatically send it back to us or download it and manually email it as an attachment?")]),_c('div',{staticClass:"mb-5"},[_c('btn',{staticClass:"mr-2",attrs:{"size":"lg","variant":"success"},on:{"click":_vm.onClickSend}},[_c('icon',{attrs:{"icon":"envelope"}}),_vm._v(" Send Now")],1),_c('btn',{attrs:{"size":"lg","variant":"success","outline":""},on:{"click":_vm.onClickDownload}},[_c('icon',{attrs:{"icon":"download"}}),_vm._v(" Download")],1)],1)]):_vm._e()]),_c('animate-css',{attrs:{"name":"fade","up":"","leave-active-class":"position-absolute w-100 h-100"}},[(_vm.activity)?_c('div',{staticClass:"my-5 py-5"},[_c('div',{staticClass:"my-5"},[_c('hourglass',{attrs:{"label":_vm.hourGlassLabel,"animate":""}})],1)]):(_vm.error)?_c('http-exception',{attrs:{"error":_vm.error}},[_c('div',{staticClass:"text-center"},[_c('btn',{staticClass:"mr-2",attrs:{"size":"lg"},on:{"click":_vm.onClickSend}},[_c('icon',{attrs:{"icon":"redo"}}),_vm._v(" Try Again\n                                ")],1),_c('btn',{attrs:{"size":"lg","variant":"secondary"},on:{"click":_vm.onClickCancel}},[_c('icon',{attrs:{"icon":"times-circle"}}),_vm._v(" Cancel\n                                ")],1)],1)]):_vm._e()],1)],1)]),_c('div',{key:1},[_c('animate-css',{attrs:{"name":"fade","leave-active-class":"position-absolute w-100 h-100"}},[_c('div',{staticClass:"text-center position-relative my-5"},[_c('icon',{staticClass:"text-success",attrs:{"icon":"check-circle","size":"6x"}}),_c('h1',{staticClass:"font-weight-light mt-3 mb-0"},[_vm._v("Thank You!")]),_c('h5',{staticClass:"font-weight-light my-4 mx-5 px-1"},[_vm._v("Thank you for your assistance in fixing these errors. We have received your document and will process it shortly.")]),_c('btn',{attrs:{"size":"lg"},on:{"click":_vm.onClickClose}},[_c('icon',{attrs:{"icon":"window-close"}}),_vm._v(" Close Window\n                        ")],1)],1)])],1),_c('div',{key:2},[_c('div',{staticClass:"text-center position-relative my-5"},[_c('icon',{staticClass:"text-secondary",attrs:{"icon":['far', 'file-archive'],"size":"6x"}}),_c('h1',{staticClass:"font-weight-light mt-3 mb-0"},[_vm._v("File Downloaded!")]),_c('h4',{staticClass:"font-weight-light mt-3 mb-1"},[_vm._v(_vm._s(_vm.download.zipname))]),_c('h5',{staticClass:"font-weight-light mb-4"},[_vm._v("("+_vm._s(_vm.download.size)+")")]),_c('div',[_c('btn',{staticClass:"mr-2",attrs:{"size":"lg","variant":"success"},on:{"click":_vm.onClickDownloadAgain}},[_c('icon',{attrs:{"icon":"download"}}),_vm._v(" Download Again\n                        ")],1),_c('btn',{attrs:{"size":"lg"},on:{"click":_vm.onClickClose}},[_c('icon',{attrs:{"icon":"window-close"}}),_vm._v(" Close Window\n                        ")],1)],1)],1)])])]},proxy:true}]),model:{value:(_vm.editor),callback:function ($$v) {_vm.editor=$$v},expression:"editor"}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/Components/Editor.vue?vue&type=template&id=49fff850&
+// CONCATENATED MODULE: ./src/Components/Editor.vue?vue&type=template&id=fb18c374&
 
 // EXTERNAL MODULE: ./node_modules/lodash/lodash.js
 var lodash = __webpack_require__("2ef0");
@@ -172,6 +172,10 @@ const throttled = Object(lodash["throttle"])(fn => {
       type: Object,
       required: true
     },
+    team: {
+      type: Object,
+      required: true
+    },
     errors: Array,
     apiKey: {
       type: String,
@@ -246,6 +250,7 @@ const throttled = Object(lodash["throttle"])(fn => {
         this.activity = true;
         this.hourGlassLabel = 'Sending...';
         Object(Functions["c" /* revision */])({
+          team_id: this.team.id,
           filename: this.currentFilename,
           revised_html: this.currentContents,
           original_html: this.originalContents
