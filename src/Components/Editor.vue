@@ -87,7 +87,6 @@ import { throttle } from 'lodash';
 import Hourglass from 'vue-hourglass';
 import HttpException from './HttpException';
 import Btn from 'vue-interface/src/Components/Btn';
-import CapsuleEditor from 'capsule-editor/src/Editor';
 import { download, revision, zip } from '@/Helpers/Functions';
 import SlideDeck from 'vue-interface/src/Components/SlideDeck';
 import AnimateCss from 'vue-interface/src/Components/AnimateCss';
@@ -119,8 +118,8 @@ export default {
         Hourglass,
         SlideDeck,
         AnimateCss,
-        CapsuleEditor,
-        HttpException
+        HttpException,
+        CapsuleEditor: () => import(/* webpackChunkName: 'capsule-editor' */'capsule-editor/src/Editor'),
     },
 
     props: {
