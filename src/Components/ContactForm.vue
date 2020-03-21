@@ -118,7 +118,7 @@ export default {
         onSubmit(event) {
             const baseURL = process.env.NODE_ENV === 'development' ?
                 'http://api.thecapsule.test/v1' :
-                'http://api.thecapsule.email/v1';
+                'https://api.thecapsule.email/v1';
 
             this.activity = true;
             
