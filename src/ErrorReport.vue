@@ -1,5 +1,4 @@
 <template>
-
     <router-view v-if="lint" :lint="lint" :api-key="apiKey" :team="team" />
 
     <div v-else-if="!error" class="position-absolute d-flex justify-content-center align-items-center h-100 w-100">
@@ -7,7 +6,6 @@
     </div>
     
     <http-exception v-else :error="error" />
-    
 </template>
 
 <script>
@@ -18,7 +16,7 @@ import bugsnag from '@bugsnag/js';
 import Hourglass from 'vue-hourglass';
 import { lint } from './Helpers/Functions';
 import bugsnagVue from '@bugsnag/plugin-vue';
-import HttpException from './Components/HttpException'
+import HttpException from './Components/HttpException';
 
 bugsnag({
     apiKey: process.env.VUE_APP_BUGSNAG,
@@ -59,29 +57,17 @@ export default {
 
     },
 
+    data() {
+        return {
+            error: null,
+            lint: this.model
+        };
+    },
+
     computed: {
 
         html() {
             return this.getSlotContents();
-        }
-
-    },
-
-    methods: {
-
-        getSlotContents() {
-            return this.$slots.default ? 
-                this.$slots.default
-                    .filter(vnode => {
-                        return vnode.tag.toLowerCase() === 'textarea';
-                    })
-                    .reduce((carry, vnode) => {
-                        return (
-                            carry + vnode.children.map(child => {
-                                return child.text;
-                            }).join('')
-                        );
-                    }, '') : null;
         }
 
     },
@@ -114,14 +100,26 @@ export default {
         }
     },
 
-    data() {
-        return {
-            error: null,
-            lint: this.model
-        };
+    methods: {
+
+        getSlotContents() {
+            return this.$slots.default ? 
+                this.$slots.default
+                    .filter(vnode => {
+                        return vnode.tag.toLowerCase() === 'textarea';
+                    })
+                    .reduce((carry, vnode) => {
+                        return (
+                            carry + vnode.children.map(child => {
+                                return child.text;
+                            }).join('')
+                        );
+                    }, '') : null;
+        }
+
     }
     
-}
+};
 </script>
 <style lang="scss">
 $blue: #2C5C97;

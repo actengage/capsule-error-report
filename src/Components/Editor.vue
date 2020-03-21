@@ -1,9 +1,8 @@
 <template>
-
     <capsule-editor
         ref="editor"
-        demo-mode
         v-model="editor"
+        demo-mode
         :team="team"
         :errors="lint.errors"
         :filename="lint.filename"
@@ -13,19 +12,26 @@
         @lint-errors="onLintError"
         @lint-success="onLintSuccess"
         @close="$router.push({name: 'home'})">
-
         <template #success>
             <slide-deck :active="active">
                 <div :key="0">
                     <div class="text-center position-relative">
                         <animate-css name="fade" up leave-active-class="position-absolute w-100 h-100">
                             <div v-if="!activity && !error">
-                                <img src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="capsule-editor-modal-logo" />
-                                <h1 class="font-weight-light mb-4">Document Fixed!</h1>
-                                <h5 class="font-weight-light mb-4 mx-5">Do you want to automatically send it back to us or download it and manually email it as an attachment?</h5>
+                                <img src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="capsule-editor-modal-logo">
+                                <h1 class="font-weight-light mb-4">
+                                    Document Fixed!
+                                </h1>
+                                <h5 class="font-weight-light mb-4 mx-5">
+                                    Do you want to automatically send it back to us or download it and manually email it as an attachment?
+                                </h5>
                                 <div class="mb-5">
-                                    <btn size="lg" variant="success" class="mr-2" @click="onClickSend"><icon icon="envelope" /> Send Now</btn>
-                                    <btn size="lg" variant="success" outline @click="onClickDownload"><icon icon="download" /> Download</btn>
+                                    <btn size="lg" variant="success" class="mr-2" @click="onClickSend">
+                                        <icon icon="envelope" /> Send Now
+                                    </btn>
+                                    <btn size="lg" variant="success" outline @click="onClickDownload">
+                                        <icon icon="download" /> Download
+                                    </btn>
                                 </div>
                             </div>
                         </animate-css>
@@ -52,8 +58,12 @@
                     <animate-css name="fade" leave-active-class="position-absolute w-100 h-100">
                         <div class="text-center position-relative my-5">
                             <icon icon="check-circle" size="6x" class="text-success" />
-                            <h1 class="font-weight-light mt-3 mb-0">Thank You!</h1>
-                            <h5 class="font-weight-light my-4 mx-5 px-1">Thank you for your assistance in fixing these errors. We have received your document and will process it shortly.</h5>
+                            <h1 class="font-weight-light mt-3 mb-0">
+                                Thank You!
+                            </h1>
+                            <h5 class="font-weight-light my-4 mx-5 px-1">
+                                Thank you for your assistance in fixing these errors. We have received your document and will process it shortly.
+                            </h5>
                             <btn size="lg" @click="onClickClose">
                                 <icon icon="window-close" /> Close Window
                             </btn>
@@ -63,9 +73,15 @@
                 <div :key="2">
                     <div class="text-center position-relative my-5">
                         <icon :icon="['far', 'file-archive']" size="6x" class="text-secondary" />
-                        <h1 class="font-weight-light mt-3 mb-0">File Downloaded!</h1>
-                        <h4 class="font-weight-light mt-3 mb-1">{{ download.zipname }}</h4>
-                        <h5 class="font-weight-light mb-4">({{ download.size }})</h5>
+                        <h1 class="font-weight-light mt-3 mb-0">
+                            File Downloaded!
+                        </h1>
+                        <h4 class="font-weight-light mt-3 mb-1">
+                            {{ download.zipname }}
+                        </h4>
+                        <h5 class="font-weight-light mb-4">
+                            ({{ download.size }})
+                        </h5>
                         <div>
                             <btn class="mr-2" size="lg" variant="success" @click="onClickDownloadAgain">
                                 <icon icon="download" /> Download Again
@@ -78,9 +94,7 @@
                 </div>
             </slide-deck>
         </template>
-        
     </capsule-editor>
-       
 </template>
 
 <script>
@@ -197,11 +211,25 @@ export default {
         }
     },
 
+    mounted() {
+        /*
+        this.$nextTick(() => {
+            const { line, ch, code } = this.$route.query;
+
+            this.$refs.editor.$refs.field.cm.state.lint.errors.forEach(error => {
+                if(error.code === code && error.line === line && error.ch === ch) {
+                    error.focus();
+                }
+            });
+        });
+        */
+    },
+
     methods: {
 
         formatBytes(bytes) {
             const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            if (bytes == 0) return '0 Byte';
+            if(bytes == 0) return '0 Byte';
             const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
             return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
         },
@@ -219,7 +247,7 @@ export default {
                     team_id: typeof this.team === 'object' ? this.team.id : this.team
                 }, this.httpRequestOptions).then(response => {
                     throttled(() => {
-                        this.active = 1
+                        this.active = 1;
                         this.error = null;
                         this.activity = false;
                     });
@@ -297,20 +325,6 @@ export default {
             } (${error.rule})`;
         }
 
-    },
-
-    mounted() {
-        /*
-        this.$nextTick(() => {
-            const { line, ch, code } = this.$route.query;
-
-            this.$refs.editor.$refs.field.cm.state.lint.errors.forEach(error => {
-                if(error.code === code && error.line === line && error.ch === ch) {
-                    error.focus();
-                }
-            });
-        });
-        */
     }
 
 };

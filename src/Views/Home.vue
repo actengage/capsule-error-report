@@ -1,24 +1,18 @@
 <template>
-
     <div class="container">
-
         <div class="bug-report mt-5">
-
             <header class="bug-report-logo">
                 <animate-css name="zoom" left enter="zoomInLeft" leave="zoomOutRight">    
-                    <img v-if="mounted" src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="img-fluid bug-report-logo-mark" />
+                    <img v-if="mounted" src="~capsule-editor/src/assets/logo-no-text-1028x1028.png" class="img-fluid bug-report-logo-mark">
                 </animate-css>
                 <animate-css name="fade" delay=".5s">
-                    <img v-if="mounted" src="../assets/capsule-logo-text.svg" class="img-fluid bug-report-logo-text" />
+                    <img v-if="mounted" src="../assets/capsule-logo-text.svg" class="img-fluid bug-report-logo-text">
                 </animate-css>
             </header>
 
             <router-view v-if="mounted" :api-key="apiKey" :lint="lint" :team="team" />
-            
         </div>
-
     </div>
-
 </template>
 
 <script>

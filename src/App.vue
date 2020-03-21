@@ -57,18 +57,18 @@ export default {
         ErrorReport
     },
 
+    data() {
+        return {
+            errors: [{"match":"<!-- #34,13|tag-close|E042|\"tag is not closed\"# -->","line":34,"column":13,"rule":"tag-close","code":"E042","msg":"\"tag is not closed\""}]
+        };
+    },
+
     computed: {
 
         apiKey() {
             return process.env.VUE_APP_SECRET;
         }
 
-    },
-
-    data() {
-        return {
-            errors: [{"match":"<!-- #34,13|tag-close|E042|\"tag is not closed\"# -->","line":34,"column":13,"rule":"tag-close","code":"E042","msg":"\"tag is not closed\""}]
-        };
     }
 };
 </script>

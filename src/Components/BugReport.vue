@@ -1,15 +1,12 @@
 <template>
-
     <div class="container">
-
         <div class="bug-report mt-5">
-
             <animate-css name="fade" delay=".6666s">
                 <notepad v-if="mounted" class="mt-5">
                     <template #header>
                         <div class="d-flex justify-content-center">
                             <div class="text-center">
-                                <img src="../assets/capsule-bug-report.png" class="img-fluid img-header" />
+                                <img src="../assets/capsule-bug-report.png" class="img-fluid img-header">
                             </div>
                         </div>
                     </template>
@@ -25,24 +22,29 @@
                         </li>
                     </ol>
                     <br>
-                    <h5 class="font-weight-bold">Additional Resources</h5>
+                    <h5 class="font-weight-bold">
+                        Additional Resources
+                    </h5>
                     <ol>
                         <li><a href="http://thecapsule.email/docs/error-codes">Error Code Glossary</a></li>
-                        <li><router-link :to="{name: 'contact'}">Contact Support</router-link></li>
+                        <li>
+                            <router-link :to="{name: 'contact'}">
+                                Contact Support
+                            </router-link>
+                        </li>
                     </ol>
                 </notepad>
             </animate-css>
 
             <animate-css name="fade" delay=".85s">
                 <div v-if="mounted" class="m-4 text-center">
-                    <btn :to="{name: 'fix'}" size="xl"><icon icon="tools" /> Fix Errors</btn>
+                    <btn :to="{name: 'fix'}" size="xl">
+                        <icon icon="tools" /> Fix Errors
+                    </btn>
                 </div>
             </animate-css>
-            
         </div>
-
     </div>
-
 </template>
 
 <script>
@@ -83,6 +85,10 @@ export default {
         AnimateCss
     },
 
+    filters: {
+        date
+    },
+
     props: {
 
         apiKey: {
@@ -102,14 +108,14 @@ export default {
         
     },
 
-    filters: {
-        date
-    },
-
     data() {
         return {
             mounted: false
         };
+    },
+
+    mounted() {
+        this.mounted = true;
     },
 
     methods: {
@@ -118,10 +124,6 @@ export default {
             return `Line ${error.line},${error.column} :: ${error.code} ${error.msg} (${error.rule})`;
         }
 
-    },
-
-    mounted() {
-        this.mounted = true;
     }
     
 };

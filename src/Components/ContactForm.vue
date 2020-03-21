@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
-            <form @submit.prevent="onSubmit" class="contact-form">
+            <form class="contact-form" @submit.prevent="onSubmit">
                 <slide-deck :active="active">
                     <div :key="0">
                         <div class="text-center text-primary mt-4 mb-4">
@@ -18,11 +18,15 @@
 
                         <animate-css name="fade">
                             <notepad v-if="showNotepad" v-model="notepad" editable :header="false" :footer="false" class="mb-3">
-                                <template #default>Hi, I am interested in using Capsule. [INSERT YOUR MESSAGE HERE]</template>
+                                <template #default>
+                                    Hi, I am interested in using Capsule. [INSERT YOUR MESSAGE HERE]
+                                </template>
                             </notepad>
                         </animate-css>
                         
-                        <btn-activity size="lg" :activity="activity" :disabled="!form.name || !form.message || !(form.email || form.phone)" block>Send Message</btn-activity>
+                        <btn-activity size="lg" :activity="activity" :disabled="!form.name || !form.message || !(form.email || form.phone)" block>
+                            Send Message
+                        </btn-activity>
                         
                         <div class="text-center mt-2">
                             <small><router-link :to="{name: 'home'}"><icon icon="long-arrow-alt-left" /> Back to Report</router-link></small>
@@ -35,9 +39,13 @@
                                     <icon :icon="['far', 'check-circle']" size="5x" />
                                 </div>
 
-                                <h1 class="text-center font-weight-light mb-4">Thank You!</h1>
+                                <h1 class="text-center font-weight-light mb-4">
+                                    Thank You!
+                                </h1>
 
-                                <p class="mx-4">Thank you for contacting us. We have received your message. We will get back to you as soon as possible.</p>
+                                <p class="mx-4">
+                                    Thank you for contacting us. We have received your message. We will get back to you as soon as possible.
+                                </p>
                             </card-body>
                         </card>
                         <div class="text-center mt-2">
@@ -89,6 +97,23 @@ export default {
         HttpException
     },
 
+    data() {
+        return {
+            active: 0,
+            error: null,
+            errors: null,
+            activity: false,
+            showNotepad: false,
+            notepad: {},
+            form: {
+                name: null,
+                email: null,
+                phone: null,
+                message: null
+            }
+        };
+    },
+
     watch: {
 
         active() {
@@ -138,26 +163,9 @@ export default {
 
         }
 
-    },
-
-    data() {
-        return {
-            active: 0,
-            error: null,
-            errors: null,
-            activity: false,
-            showNotepad: false,
-            notepad: {},
-            form: {
-                name: null,
-                email: null,
-                phone: null,
-                message: null
-            }
-        }
     }
 
-}
+};
 </script>
 
 <style lang="scss">
