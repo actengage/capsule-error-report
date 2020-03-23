@@ -21,13 +21,13 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
-    "capsule-editor": "^0.9.9",
+    "capsule-editor": "^0.9.17",
     "crypto-js": "^4.0.0",
     "jszip": "^3.2.2",
     "moment": "^2.24.0",
-    "vue-hourglass": "^0.1.3",
-    "vue-interface": "^0.4.54",
-    "vue-notepad": "^0.2.14",
+    "vue-hourglass": "^0.1.4",
+    "vue-interface": "^0.4.55",
+    "vue-notepad": "^0.2.15",
     "vue-router": "^3.1.6"
   },
   "devDependencies": {
